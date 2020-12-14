@@ -137,7 +137,7 @@ class PaymentGatway extends React.Component {
             order_id: order.razorpay_order_id,
             handler: async function (response) {
                 const data = {
-                    orderCreationId: order.razorpay_order_id,
+                    // orderCreationId: order.razorpay_order_id,
                     razorpayPaymentId: response.razorpay_payment_id,
                     razorpayOrderId: response.razorpay_order_id,
                     razorpaySignature: response.razorpay_signature,

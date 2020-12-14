@@ -274,7 +274,7 @@ class Allappointment extends React.Component {
 
                                 <Link
                                     to={{
-                                        pathname: "/Prescription",
+                                        pathname: "/Reschedule",
                                         Data: { item },
                                     }}
                                     className="MarginTop11"

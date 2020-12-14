@@ -147,11 +147,7 @@ class AllHospital extends Component {
                         Add Member
                     </Link>
                     <div className="flex-container">{postList}</div>
-                    {/* <div className="add_departmet">
-                        <Link to="/Addhospital">
-                            <i className="fas fa-plus"></i> Add Hospital{" "}
-                        </Link>
-                    </div> */}
+
                 </div>
             </div>
         );

@@ -111,8 +111,7 @@ class Myhospital extends React.Component {
             <Link to="/UpdateProfile">
               <i className="far fa-edit"></i> Edit Profile{" "}
             </Link>
-          </div>
-          <div className="add_departmet">
+
             <Link to="/family">
               <i className="far fa-edit"></i> My Family{" "}
             </Link>

@@ -138,20 +138,22 @@ class Login extends React.Component {
                 {this.state.hidden ? <i class="fas fa-eye-slash"></i> : <i class="fas fa-eye"></i>}
               </p>
             </div>
-            {/* <Link to="/ForgetPassword">
+            <Link to="/ForgetPassword">
               <a href="confirm" className="forgotpass">
                 Forgot Password ?
             </a>
-            </Link> */}
+            </Link>
           </div>
           <div>
             {/* <input type="submit" className="button" /> */}
             <button id="submit">Login</button>
           </div>
-          <div>
-            {/* <input type="submit" className="button" /> */}
-            <button id="submit">Signup</button>
-          </div>
+          <Link to="/Signup">
+            <div>
+              {/* <input type="submit" className="button" /> */}
+              <button id="submit">Signup</button>
+            </div>
+          </Link>
         </form>
       </section>
     );

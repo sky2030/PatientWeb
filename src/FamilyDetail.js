@@ -216,6 +216,10 @@ class AddFamilyMember extends React.Component {
                                         selected={this.state.birth_millis}
                                         onChange={(date) => this.handleDatePicker(date)}
                                         className="calendardob"
+                                        peekNextMonth
+                                        showMonthDropdown
+                                        showYearDropdown
+                                        dropdownMode="select"
                                     />
                                 </div>
                                 <select

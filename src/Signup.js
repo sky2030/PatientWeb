@@ -1,5 +1,5 @@
 import React from "react";
-import Navigation from "./Nav";
+
 import "./dashboard/dashboard.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -7,24 +7,29 @@ import { Redirect } from "react-router-dom";
 import moment from "moment-timezone";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import ForgetPassword from "./ForgetPassword";
 
-const BASE = "https://stage.mconnecthealth.com";
-const BASE_URL = `${BASE}/v1/patient/`
-
-class AddFamilyMember extends React.Component {
+class Updatehospitaldetails extends React.Component {
     constructor(props) {
         super(props);
 
+
         this.state = {
-            name: '',
-            relation: '',
-            birth_millis: undefined,
-            height: '',
-            weight: '',
-            gender: '',
-            nameError: '',
-
-
+            patient_name: "",
+            gender: "",
+            mobile: "",
+            height: 0,
+            weight: 0,
+            email: "",
+            password: "",
+            confirm_password: "",
+            submitted: false,
+            emailError: "",
+            mobileError: "",
+            passwordError: "",
+            confirm_passwordError: "",
+            heightError: "",
+            weightError: ""
         };
     }
     componentDidMount = () => {
@@ -34,15 +39,51 @@ class AddFamilyMember extends React.Component {
 
 
     validate = () => {
-        let nameError = "";
+        let emailError = "";
+        let mobileError = "";
+        let passwordError = "";
+        let confirm_passwordError = "";
+        let heightError = "";
+        let weightError = ""
 
-        if (!this.state.name) {
-            nameError = "****Name Field Cannot be Empty";
+        if (!this.state.email.includes("@")) {
+            emailError = "****Invalid Email";
+        }
+        if (!this.state.phone) {
+            mobileError = "****Phone number cannot be blank";
         }
 
-        if (nameError) {
+        if (!this.state.passwordError) {
+            passwordError = "****Password cannot be blank";
+        }
+
+        if (!this.state.confirm_passwordError) {
+            confirm_passwordError = "****Confirm password same as passwordand cannot be blank";
+        }
+
+        if (!this.state.heightError) {
+            heightError = "****Choose the correct height";
+        }
+
+        if (!this.state.weightError) {
+            weightError = "****Choose the correct weight";
+        }
+
+        if (emailError ||
+            mobileError ||
+            passwordError ||
+            confirm_passwordError ||
+            heightError ||
+            weightError
+        ) {
             this.setState({
-                nameError,
+
+                emailError,
+                mobileError,
+                passwordError,
+                confirm_passwordError,
+                heightError,
+                weightError
             });
             return false;
         }
@@ -50,58 +91,60 @@ class AddFamilyMember extends React.Component {
         return true;
     };
 
-    SubmitFamilyMember = (event) => {
-        event.preventDefault();
-        const {
-            name,
-            relation,
-            height,
-            weight,
-            gender,
-            birth_millis
-        } = this.state;
 
+
+    handleSubmit = (event) => {
+        event.preventDefault();
         const isValid = this.validate();
         if (isValid) {
 
-            const payload = {
-                name,
-                relation,
+            const {
+                mobile,
+                email,
+                patient_name,
+                password,
+                confirm_password,
                 height,
                 weight,
-                gender,
-                birth_millis: moment(birth_millis).format("x")
-            }
-            let method = "POST"
-            let url = `${BASE_URL}family-members/add`
+            } = this.state;
+
+            const payload = {
+                email,
+                password,
+                confirm_password,
+                //patient_name,
+                height,
+                weight,
+                mobile,
+            };
+            console.log("this is payload" + JSON.stringify(payload))
             axios({
-                url: url,
-                method: method,
+                url: `https://stage.mconnecthealth.com/v1/patient/signup`,
+                method: "POST",
                 data: payload,
                 headers: {
                     Authorization: localStorage.getItem("token"),
                 },
             })
                 .then((response) => {
-                    if (response.code === 200) {
-                        alert(response.message);
-                        console.log("Data has been sent to the server successfully");
-                    } else {
-                        console.log(response.message);
+                    if (response.data.code === 200) {
+                        alert(response.data.message)
+                        this.resetUserInputs();
+                        this.setState({
+                            submitted: true,
+                        });
                     }
-                    //this.resetUserInputs();
-                    this.setState({
-                        submitted: true,
-                    });
+                    else {
+                        alert(response.data.message);
+                    }
+
                 })
-                .catch((error) => {
-                    alert(error)
+                .catch((Error) => {
+                    alert(Error)
                     console.log("internal server error");
                 });
         }
     };
-
-
 
     handleChange = ({ target }) => {
         const { name, value } = target;
@@ -109,19 +152,6 @@ class AddFamilyMember extends React.Component {
     };
 
 
-
-    handleDatePicker = (date) => {
-        console.log(date);
-        this.setState({
-            birth_millis: date
-        });
-    };
-
-    handleGender = (e) => {
-        this.setState({
-            gender: e.target.value
-        })
-    }
     handleHeight = (e) => {
         this.setState({
             height: e.target.value,
@@ -134,81 +164,104 @@ class AddFamilyMember extends React.Component {
         });
     };
 
-    handleRelation = (e) => {
-        this.setState({
-            relation: e.target.value,
-        });
-    };
-
-
-
     resetUserInputs = () => {
         this.setState({
+            patient_name: "",
+            username: "",
+            password: "",
+            confirm_password: "",
+            height: "",
+            weight: "",
+            email: "",
+            mobile: ""
 
         });
     };
     render() {
         const {
-            name,
+            email,
+            mobile,
             height,
             weight,
-            nameError
+            password,
+            confirm_password,
         } = this.state;
 
         if (this.state.submitted) {
-            return <Redirect to="/family" />;
+            return <Redirect to="/Login" />;
         }
         return (
             <div className="Appcontainer">
-                <Navigation />
+
 
                 <div className="dashboard_wrap">
 
                     <div className="adddept">
                         <div className="backarrow">
                             {" "}
-                            <Link to="/family">
+                            <Link to="/Login">
                                 <i className="fas fa-arrow-left"></i>
                             </Link>
                         </div>
-                        <h2>Add Family Member</h2>
+                        <h2> Patient Sign Up</h2>
 
-                        <form action="confirm" onSubmit={this.SubmitFamilyMember}>
+                        <form action="confirm" onSubmit={this.handleSubmit}>
 
                             <div className="row">
 
+                                {/* <input
+                                    type="text"
+                                    name="patient_name"
+                                    value={patient_name}
+                                    placeholder="Full Name"
+                                    onChange={this.handleChange}
+                                /> */}
                                 <input
                                     type="text"
-                                    name="name"
-                                    value={name}
-                                    placeholder="Enter Family Member Name"
+                                    name="email"
+                                    value={email}
+                                    placeholder="Enter Email Address"
                                     onChange={this.handleChange}
                                 />
-                                <div style={{ color: 'red', fontSize: "12px" }}> {nameError}</div>
-                                <div className="Calendar">
-                                    Date of Birth:
-                                    <DatePicker
-                                        disabled={false}
-                                        mode="date"
-                                        selected={this.state.birth_millis}
-                                        onChange={(date) => this.handleDatePicker(date)}
-                                        className="calendardob"
-                                        peekNextMonth
-                                        showMonthDropdown
-                                        showYearDropdown
-                                        dropdownMode="select"
-                                    />
+                                <div style={{ fontSize: 12, color: "red" }}>
+                                    {this.state.emailError}
                                 </div>
-                                <select
-                                    onChange={this.handleGender}>
-                                    <option value="Male">Male </option>
-                                    <option value="Female">Female </option>
-                                    <option value="Other">Other </option>
 
-                                </select>
+                                <input
+                                    type="text"
+                                    name="mobile"
+                                    value={mobile}
+                                    placeholder="Enter Mobile No"
+                                    onChange={this.handleChange}
+                                />
+                                <div style={{ fontSize: 12, color: "red" }}>
+                                    {this.state.mobileError}
+                                </div>
+                                <input
+                                    type="password"
+                                    name="password"
+                                    value={password}
+                                    placeholder="Enter Password"
+                                    onChange={this.handleChange}
+                                />
+                                <div style={{ fontSize: 12, color: "red" }}>
+                                    {this.state.passwordError}
+                                </div>
+                                <input
+                                    type="password"
+                                    name="confirm_password"
+                                    value={confirm_password}
+                                    placeholder="Enter  Confirm Password"
+                                    onChange={this.handleChange}
+                                />
+                                <div style={{ fontSize: 12, color: "red" }}>
+                                    {this.state.confirm_passwordError}
+                                </div>
+
+
                                 <div className="Calendar">
                                     Weight: {weight} kg
-                                    <select
+                  <select
                                         style={{ width: '20px', height: '30px', margin: "8px" }}
                                         onChange={this.handleWeight}>
                                         <option value="N/A">N/A</option>
@@ -413,8 +466,11 @@ class AddFamilyMember extends React.Component {
                                         <option value="199">199 kg</option>
                                         <option value="200">200 kg</option>
                                     </select>
-                                        Height: {height} cm
-                                        <select
+                                    <div style={{ fontSize: 12, color: "red" }}>
+                                        {this.state.weightError}
+                                    </div>
+                  Height: {height} cm
+                  <select
                                         style={{ width: '20px', height: '30px', margin: "8px" }}
                                         onChange={this.handleHeight}>
                                         <option value="N/A">N/A</option>
@@ -619,32 +675,25 @@ class AddFamilyMember extends React.Component {
                                         <option value="228 cm">228 cm</option>
                                         <option value="229 cm">229 cm</option>
                                     </select>
+                                    <div style={{ fontSize: 12, color: "red" }}>
+                                        {this.state.weightError}
+                                    </div>
                                 </div>
-                                <select
-                                    onChange={this.handleRelation}>
-                                    <option value="N/A">N/A </option>
-                                    <option value="son">Son </option>
-                                    <option value="daughter">Daughter </option>
-                                    <option value="father">Father </option>
-                                    <option value="mother">Mother </option>
-                                    <option value="grand-mother">Grand Mother </option>
-                                    <option value="grand-father">Grand Father </option>
-                                    <option value="wife">Wife </option>
-                                    <option value="husband">Husband </option>
-                                    <option value="other">Other </option>
-
-                                </select>
-
-
 
                             </div>
 
-
                             <div className="btncontainer">
+
                                 <button type="submit" className="Updatebtn">
                                     <i className="fas fa-save"></i>
-                                            Add Family Member
+                                        SignUp
+                                </button>
+                                <Link to="/Login">
+                                    <button type="reset" className="Updatebtn">
+                                        <i className="fas fa-save"></i>
+                                        SignIn
                                      </button>
+                                </Link>
                             </div>
 
                         </form>
@@ -654,4 +703,4 @@ class AddFamilyMember extends React.Component {
         );
     }
 }
-export default AddFamilyMember;
+export default Updatehospitaldetails;

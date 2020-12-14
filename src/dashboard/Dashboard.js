@@ -33,7 +33,6 @@ class Dashboard extends React.Component {
           <div className="dashboard_maincontent">
             <img src={bgimg} alt="doctor-img" />
             <div className="dashboard_icons">
-
               <ul>
                 <li>
                   <Link to="/Allhospital">

@@ -27,7 +27,7 @@ const BOOKED_FONT = "#606e60";
 const CANCELLED_FONT = "#ACB9B7";
 const COMPLETED_FONT = "#fff";
 
-class Bookingslot extends React.Component {
+class Reschedule extends React.Component {
     constructor(props) {
         super(props);
         const token = localStorage.getItem("token");
@@ -51,7 +51,7 @@ class Bookingslot extends React.Component {
             isDatePickerAvailable: 'false',
             family_member_id: '',
             slotDate: new Date(),
-
+            appointmentItem: { doctor: {}, hospital: {}, department: {} }
         };
     }
 
@@ -113,12 +113,13 @@ class Bookingslot extends React.Component {
     };
     componentDidMount = async () => {
         await this.setState({
-            doctor: this.props.location.Doctor.post,
+            doctor: this.props.location.hospital.code,
             post: this.props.location.Doctor.post
         });
         // await this.updateStartEndDate(new Date())
         this.getDoctorsSlots()
         this.getfamilydetails()
+        this.updateRescheduleAppointment()
     };
 
     getDoctorsSlots = () => {
@@ -129,7 +130,7 @@ class Bookingslot extends React.Component {
         } = this.state;
         axios
             .get(
-                `${BASE_URL}doctorslots?code=${this.state.doctor.hospitalcode}&did=${this.state.doctor._id}&day_from=${startDate}&day_to=${endDate}`,
+                `${BASE_URL}doctorslots?code=${this.state.hospital.code}&did=${this.state.doctor.id}&day_from=${startDate}&day_to=${endDate}`,
 
                 {
                     headers: {
@@ -155,11 +156,38 @@ class Bookingslot extends React.Component {
 
 
 
-    getfamilydetails = () => {
+    // getfamilydetails = () => {
+    //     console.log("Data has been received!!");
+    //     axios
+    //         .get(
+    //             `${BASE_URL}family-members`,
+    //             {
+    //                 headers: {
+    //                     Authorization: localStorage.getItem("token"),
+    //                 },
+    //             }
+    //         )
+    //         .then((response) => {
+    //             console.log("this is family" + response);
+    //             if (response.data.code === 200) {
+    //                 const data = response.data.data.members;
+    //                 console.log(response);
+    //                 this.setState({ familyData: data });
+    //                 console.log("Data has been received!!");
+    //             } else {
+    //                 alert(response.data.message)
+    //             }
+    //         })
+    //         .catch((Error) => {
+    //             alert(Error);
+    //         });
+    // };
+
+    updateRescheduleAppointment = () => {
         console.log("Data has been received!!");
         axios
-            .get(
-                `${BASE_URL}family-members`,
+            .PUT(
+                `${BASE_URL}appointment/reschedule`,
                 {
                     headers: {
                         Authorization: localStorage.getItem("token"),
@@ -168,8 +196,14 @@ class Bookingslot extends React.Component {
             )
             .then((response) => {
                 console.log("this is family" + response);
+                const data = response.data.data;
+                this.setState({
+                    from_appointment_id: this.state.appointmentItem.id,
+                    to_appointment_id: this.state.item.id,
+
+                });
                 if (response.data.code === 200) {
-                    const data = response.data.data.members;
+                    const data = response.data.data;
                     console.log(response);
                     this.setState({ familyData: data });
                     console.log("Data has been received!!");
@@ -182,6 +216,27 @@ class Bookingslot extends React.Component {
             });
     };
 
+    slotPressed = (item, index) => {
+        if (item.status == IS_AVAILABLE || item.status == IS_TRANSIENT) {
+            alert(
+                "Reschedule your appointment",
+                // `Would you like to book ${StringFromTime(this.item.time_millis)} slot ?`,
+                [
+                    {
+                        text: "Cancel",
+                        style: "cancel",
+                    },
+                    {
+                        text: "OK",
+                        // onPress: (item) => {
+                        //     updateRescheduleAppointment(item);
+                        // navigation.navigate("Appointment")
+                        //},
+                    },
+                ]
+            );
+        }
+    };
 
     render() {
         const { doctor, post, posts, familyData, slotDate } = this.state;
@@ -248,6 +303,8 @@ class Bookingslot extends React.Component {
 
 
                     </Link>
+
+
 
 
                 );
@@ -357,7 +414,7 @@ class Bookingslot extends React.Component {
                                     />
 
                                 </div>
-                                <div className='datecssne3'>
+                                {/* <div className='datecssne3'>
                                     <h5
                                         style={{
                                             marginBottom: '5px'
@@ -368,13 +425,13 @@ class Bookingslot extends React.Component {
                                         {familylist}
 
                                     </select>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
 
 
                         <div className='bookingslotcss'>
-
+                            {this.state.family_member_id}
                             <h4>Booking Slots Status</h4>
 
                             <div className='slotdatecss'>
@@ -391,4 +448,4 @@ class Bookingslot extends React.Component {
         );
     }
 }
-export default Bookingslot;
+export default Reschedule;

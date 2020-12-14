@@ -490,12 +490,17 @@ footer {
   border: 1px solid #999;
 }
 header {
+  display: flex;
+  overflow: hidden;
   margin-top: 0px;
   box-shadow: 0px 2px 2px #ccc;
-  width: 100vw;
   background-color: #fff;
-  height: 8vh;
 }
+
+header #myNav {
+  display: inline-block;
+}
+
 header ul {
   list-style-type: none;
   margin: 0;
@@ -511,6 +516,13 @@ header ul li a {
   color: #000;
   text-decoration: none;
   font-size: 13px;
+}
+header ul li:hover {
+  background-color: #042377;
+  color: white;
+}
+header ul li a:hover {
+  color: white;
 }
 .container {
   margin: 0 auto;
@@ -529,12 +541,7 @@ header ul li a {
   width: 10vw;
   text-align: left;
 }
-header ul li:last-child {
-  float: right;
-  text-align: right;
-  line-height: 28px;
-  padding-right: 0px;
-}
+
 header ul li a i {
   padding-right: 7px;
   font-size: 16px;
@@ -922,17 +929,14 @@ h3 {
   background-color: rgb(46 82 147);
   padding: 10px 15px;
   border-radius: 25px;
+  margin-bottom: 1em;
 }
-.add_departmet img {
-  width: 22px;
-  padding: 2px;
-  vertical-align: middle;
-}
+
 .add_departmet {
-  padding-bottom: 20px;
-  padding-top: 15px;
+  display: flex;
+  justify-content: space-around;
+  width: 20vw;
   text-align: center;
-  margin-left: 6em;
 }
 .add_departmet1 {
   text-align: center;
@@ -1473,6 +1477,7 @@ section.login form {
     height: 15vh;
     float: left;
   }
+
   /* header{
 	  z-index:1;
 	  position: relative;
@@ -1493,9 +1498,6 @@ section.login form {
     word-wrap: break-word;
   }
 
-  header ul li:last-child {
-    margin-right: 2em;
-  }
   .dashboard_wrap2 {
     width: 80vw;
     margin: 0px auto;
@@ -1520,6 +1522,16 @@ section.login form {
   /* footer{ */
   /* position:inherit; */
   /* } */
+}
+header .icon {
+  width: 45px;
+  background-color: rgba(22, 115, 190, 0.8);
+  display: none;
+  position: absolute;
+  right: 0px;
+  font-size: 35px;
+  top: 0px;
+  color: white;
 }
 
 @media only screen and (max-width: 420px) {
@@ -1557,10 +1569,7 @@ section.login form {
     background-size: cover;
   }
   .dashboard_icons {
-    position: absolute;
-    left: 15px;
-    top: 260px;
-    width: 100%;
+    top: 230px;
   }
 
   .logo img {
@@ -1618,21 +1627,53 @@ section.login form {
     width: 30vw;
   }
   header {
+    display: flex;
     margin-top: 0px;
     box-shadow: 0px 2px 2px #ccc;
-    width: 100vw;
     background-color: #fff;
-    height: 25vh;
   }
+  header #myNav {
+    display: none;
+  }
+  header .icon {
+    width: 60px;
+    background-color: rgba(22, 115, 190, 0.8);
+    display: block;
+    position: absolute;
+    right: 7px;
+    font-size: 45px;
+    top: 2px;
+    color: white;
+  }
+
   header ul li {
-    display: inline-block;
+    display: flex;
     padding: 5px;
-    width: 30vw;
+    width: 100vw;
     line-height: 20px;
+    justify-content: center;
+    background-color: rgba(22, 115, 190, 0.8);
+    margin-right: 5px;
+    border-bottom: 1px solid white;
   }
+
   header ul li a {
-    font-size: 15px;
+    font-size: 20px;
+    color: white;
   }
+
+  header ul li a:hover {
+    color: black;
+  }
+  .active {
+    background-color: #4caf50;
+    color: white;
+  }
+  header ul li a i {
+    font-size: 15px;
+    color: white;
+  }
+
   .hospitalimg img {
     width: 35vw;
     height: 15vh;
@@ -1710,5 +1751,14 @@ section.login form {
   }
   .add_departmet {
     margin-bottom: 2em;
+    width: 80vw;
+
+    flex-direction: column;
+  }
+  .profileflex {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 }

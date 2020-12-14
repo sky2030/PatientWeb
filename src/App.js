@@ -9,9 +9,6 @@ import Contact from "./Contact";
 import Alltransaction from "./Alltransaction";
 import splash from "./splash";
 import Login from "./Login";
-import HospitalSpeciality from "./HospitalSpeciality";
-import AddSpecialities from "./AddSpecialities";
-import Speciality from "./Speciality";
 import ForgetPassword from './ForgetPassword'
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Allhospital from './AllHospitals'
@@ -28,6 +25,8 @@ import Prescription from './Prescription/history'
 import PrescriptionAppointment from './Prescription/Appointment'
 import RazorPayment from './Payment'
 import DoctorBookingSLot from './DoctorBookingSlot'
+import Reschedule from './Reschedule'
+import Signup from './Signup'
 
 
 function App() {
@@ -41,13 +40,10 @@ function App() {
           <Route path="/Dashboard" component={Dashboard} />
           <Route path="/Doctorlist" component={Doctorlist} />
           <Route path="/PatientProfile" component={PatientProfile} />
-          <Route path="/Speciality" component={Speciality} />
           <Route path="/ForgetPassword" component={ForgetPassword} />
           <Route path="/UpdateProfile" component={UpdatePatientProfile} />
           <Route path="/Contact" component={Contact} />
           <Route path="/Transactions" component={Alltransaction} />
-          <Route path="/HospitalSpeciality" component={HospitalSpeciality} />
-          <Route path="/AddSpecialities" component={AddSpecialities} />
           <Route path="/Allhospital" component={Allhospital} />
           <Route path="/Allappointment" component={Allappointment} />
           <Route path="/Reports" component={ReportScreen} />
@@ -62,6 +58,8 @@ function App() {
           <Route path="/Prescription" component={PrescriptionAppointment} />
           <Route path="/payment" component={RazorPayment} />
           <Route path="/DoctorBookingSLot" component={DoctorBookingSLot} />
+          <Route path="/Reschedule" component={Reschedule} />
+          <Route path="/Signup" component={Signup} />
 
 
 

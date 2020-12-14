@@ -27,7 +27,7 @@ class ForgetPassword extends React.Component {
         let emailError = "";
 
         if (!this.state.email) {
-            emailError = "****User Name cannot be blank";
+            emailError = "****Email Address cannot be blank";
         }
 
         if (emailError) {
@@ -44,60 +44,60 @@ class ForgetPassword extends React.Component {
         });
     };
 
-    // submitForm = (e) => {
-    //     e.preventDefault();
-    //     const { email, password } = this.state;
-    //     const isValid = this.validate();
-    //     if (isValid) {
-    //         const payload = {
-    //             email,
-    //             password,
-    //         };
+    submitForm = (e) => {
+        e.preventDefault();
+        const { email, password } = this.state;
+        const isValid = this.validate();
+        if (isValid) {
+            const payload = {
+                email,
+                password,
+            };
 
-    //         axios({
-    //             url: "https://stage.mconnecthealth.com/v1/hospital/login",
-    //             method: "POST",
-    //             data: payload,
-    //         })
-    //             .then(async (response) => {
-    //                 const data = response.data.data.access_token;
-    //                 console.log(response);
-    //                 if (response.data.code === 200) {
-    //                     localStorage.setItem("token", data);
-    //                     await this.setState({
-    //                         token: localStorage.getItem("token"),
-    //                     });
-    //                 } else {
-    //                     alert(response.data.message)
-    //                     console.log("Something Went Wrong", e);
-    //                 }
-    //             }
-    //             )
-    //             .catch((Error) => {
-    //                 alert(Error + " Server Not Responding")
-    //                 console.log("internal server error");
-    //             });
-    //     }
+            axios({
+                url: "https://stage.mconnecthealth.com/v1/patient/forget-password",
+                method: "POST",
+                data: payload,
+            })
+                .then(async (response) => {
+                    const data = response.data.data.access_token;
+                    console.log(response);
+                    if (response.data.code === 200) {
+                        localStorage.setItem("token", data);
+                        await this.setState({
+                            token: localStorage.getItem("token"),
+                        });
+                    } else {
+                        alert(response.data.message)
+                        console.log("Something Went Wrong", e);
+                    }
+                }
+                )
+                .catch((Error) => {
+                    alert(Error + " Server Not Responding")
+                    console.log("internal server error");
+                });
+        }
 
-    // this.setState({
-    //   token:localStorage.getItem("token")
-    // })
+        this.setState({
+            token: localStorage.getItem("token")
+        })
 
-    // if (this.state.token === '') {
-    //   return null
-    // }
-    // else {
-    //   this.setState({
-    //     LoggedIn: true
-    //   })
-    // }
-    // if(email ==="8882973229" && password ==="shiv"){
-    //   localStorage.setItem("token", "aaaefdgadftaerd")
-    //   this.setState({
-    //     LoggedIn: true
-    //   })
-    // }
-    //};
+        if (this.state.token === '') {
+            return null
+        }
+        else {
+            this.setState({
+                LoggedIn: true
+            })
+        }
+        if (email === "8882973229" && password === "shiv") {
+            localStorage.setItem("token", "aaaefdgadftaerd")
+            this.setState({
+                LoggedIn: true
+            })
+        }
+    };
     render() {
         if (this.state.token !== "") {
             return <Redirect to="/Login" />;

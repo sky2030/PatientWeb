@@ -115,11 +115,7 @@ class Alldepartment extends React.Component {
           <h2>All Department</h2>
 
           {postList}
-          <div className="add_departmet">
-            {/* <Link to="/Adddepartment">
-              <i className="fas fa-plus"></i> Add Department
-            </Link> */}
-          </div>
+
         </div>
       </div>
     );
