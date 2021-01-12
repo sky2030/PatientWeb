@@ -21,33 +21,25 @@
   color: white;
 }
 .backbtn {
-  height: 5vh;
   background-color: rgb(6, 105, 185);
   color: white;
   padding: 0.4rem;
   text-decoration: none;
   border-radius: 4px;
   font-size: 1em;
-  align-items: flex-start;
-  justify-content: flex-start;
-  margin-right: 100em;
-  padding-top: 0.05em;
+  align-items: center;
+  justify-content: center;
 }
 
 .backbtnslot {
-  height: 5vh;
-  width: 2vw;
   background-color: rgb(6, 105, 185);
   color: white;
   padding: 0.4rem;
   text-decoration: none;
   border-radius: 4px;
   font-size: 1em;
-  align-items: flex-start;
-  justify-content: flex-start;
-  margin-right: 90em;
-  padding-top: 0.05em;
-  margin-top: 1em;
+  align-items: center;
+  justify-content: center;
   margin-left: 4em;
 }
 
@@ -68,11 +60,11 @@
 .cancelbtn {
   margin-right: "2em";
 }
+
 img.vert-move {
-  -webkit-animation: mover 1s infinite alternate;
-  animation: mover 1s infinite alternate;
-}
-img.vert-move {
+  position: absolute;
+  top: 400px;
+
   -webkit-animation: mover 1s infinite alternate;
   animation: mover 1s infinite alternate;
 }
@@ -111,14 +103,28 @@ img.vert-move {
   padding: 5px;
   text-align: center;
 }
+.tranbottom {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.tranbottom button {
+  width: 8em;
+  height: 2.5em;
+  margin: 1em;
+  border-radius: 0.5em;
+  color: white;
+  border-color: white;
+  background-color: rgb(6, 105, 185);
+}
 .reportscss {
-  width: 9em;
+  cursor: pointer;
+  width: 11em;
   height: 3em;
   border-radius: 0.5em;
   color: white;
-  background-color: #3d3db5;
+  background-color: rgb(6, 105, 185);
   text-decoration: none;
-  margin-left: 2em;
 }
 .specialityIMG {
   width: 200px;
@@ -129,8 +135,13 @@ img.vert-move {
   color: #6e0214;
   font-weight: 600;
 }
-
+.splash-logo {
+  background-size: cover;
+  height: 55vmin;
+  pointer-events: none;
+}
 .splash_bg {
+  overflow: hidden;
   background: #000428; /* fallback for old browsers */
   background: -webkit-linear-gradient(
     to right,
@@ -142,11 +153,10 @@ img.vert-move {
     #004e92,
     #000428
   ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
-  height: 87vh;
   /* display: flex; */
   height: 96vh;
-  width: 100%;
+  width: 100vw;
+  padding-top: 100px;
   justify-content: center;
   align-items: center;
 }
@@ -221,16 +231,17 @@ img.vert-move {
 .Appcontainer {
   align-items: center;
   justify-content: center;
+  width: 100vw;
 }
 .App {
   text-align: center;
   width: 100vw;
 }
 .MarginTop11 {
-  margin-top: 10px;
-  margin-right: 20px;
-  margin-bottom: 5px;
+  display: flex;
   text-decoration: none;
+  justify-content: center;
+  align-items: center;
 }
 .noappointmentcss {
   margin-top: 20px;
@@ -311,11 +322,6 @@ body {
   border-width: 0px;
 }
 
-.splash-logo {
-  height: 55vmin;
-  pointer-events: none;
-}
-
 img.vert-move {
   -webkit-animation: mover 1s infinite alternate;
   animation: mover 1s infinite alternate;
@@ -374,11 +380,12 @@ ul.dlist li {
 
 .dashboard_wrap {
   width: 90vw;
-  margin: 5px auto;
+  margin: 0px auto;
   /* flex-direction: row;
     display: flex; */
 }
 .prescriptioncss {
+  cursor: pointer;
   width: 9em;
   height: 3em;
   border-radius: 0.5em;
@@ -386,23 +393,30 @@ ul.dlist li {
   background-color: #3d3db5;
 }
 .reschedulecss {
-  width: 9em;
+  cursor: pointer;
+  width: 11em;
   height: 3em;
-  margin-left: 2em;
-  margin-bottom: 5px;
   border-radius: 0.5em;
   color: white;
-  background-color: #3d3db5;
+  background-color: rgb(6, 105, 185);
+}
+.consentcss {
+  cursor: pointer;
+  width: 45em;
+  height: 3em;
+  border-radius: 0.5em;
+  color: white;
+  background-color: rgb(6, 105, 185);
 }
 .appointmentbutton {
-  width: 10em;
+  width: 12em;
   height: 2.5em;
   margin-left: 2em;
   margin-bottom: 5px;
   border-radius: 0.5em;
   color: white;
   border-color: white;
-  background-color: #1b31f3;
+  background-color: rgb(6, 105, 185);
 }
 .dashboard_wrap2 {
   width: 80vw;
@@ -428,10 +442,12 @@ ul.dlist li i {
 }
 .dashboard_maincontent {
   position: relative;
+  height: 85vh;
+  overflow: hidden;
 }
 .dashboard_maincontent img {
   width: 100%;
-  height: 80vh;
+  /* height: 80vh; */
   background-size: cover;
 }
 .dashboard_icons {
@@ -495,6 +511,7 @@ header {
   margin-top: 0px;
   box-shadow: 0px 2px 2px #ccc;
   background-color: #fff;
+  margin-bottom: 0.5em;
 }
 
 header #myNav {
@@ -518,10 +535,12 @@ header ul li a {
   font-size: 13px;
 }
 header ul li:hover {
-  background-color: #042377;
-  color: white;
+  background-color: #577ad8;
 }
 header ul li a:hover {
+  color: white;
+}
+header ul li a i:hover {
   color: white;
 }
 .container {
@@ -561,8 +580,12 @@ header ul li a i {
   align-items: center;
   justify-content: center;
 }
-.spinnerdiv img {
+/* .spinnerdiv img {
   width: 80vw;
+} */
+.spinnernew img {
+  width: 30vw;
+  /* height: 40vw; */
 }
 .right {
   float: right;
@@ -589,6 +612,7 @@ header ul li a i {
     rgba(215, 230, 246, 1) 100%
   );
   text-align: center;
+  padding-bottom: 10px;
 }
 .updatehosp {
   width: 60%;
@@ -657,13 +681,13 @@ form {
   height: 40vh;
   display: flex;
   flex-direction: column;
-  margin: 2em;
+  margin: 1.5em;
   background-color: #999;
 }
 
 .reportcard img {
   width: 15vw;
-  height: 40vh;
+  height: 35vh;
   position: relative;
   transition: transform 0.2s;
 }
@@ -678,7 +702,6 @@ form {
   color: white;
   display: flex;
   font-size: 13px;
-  flex-direction: row;
   padding: 3px;
   justify-content: space-around;
   align-items: center;
@@ -693,16 +716,77 @@ form {
   padding-top: 3px;
   padding-bottom: 3px;
   border-radius: 10px;
+  cursor: pointer;
+}
+.ReportHeader {
+  background-color: rgb(5, 107, 202);
+  width: 60vw;
+  color: white;
+  display: flex;
+  font-size: 15px;
+  padding: 3px;
+  border-bottom: 2px solid black;
+  align-items: center;
+}
+.Reportpanel {
+  background-color: rgb(255, 255, 255);
+  width: 60vw;
+  color: rgb(0, 0, 0);
+  display: flex;
+  font-size: 13px;
+  padding: 3px;
+  border: 1px solid black;
+  align-items: center;
+}
+.reportindex {
+  width: 2vw;
+  display: flex;
+  justify-content: center;
+  margin-left: 1em;
+  margin-right: 1em;
+}
+.reportbox {
+  width: 15vw;
+  display: flex;
+}
+.reportbtn {
+  width: 25vw;
+  display: flex;
+  justify-content: center;
+}
+
+.Reportpanel button {
+  font-size: 25px;
+  margin-right: 2em;
+  background-color: rgb(255, 255, 255);
+  border-width: 0px;
+  color: rgb(5, 107, 202);
+  cursor: pointer;
+}
+.ReportView {
+  width: 80vw;
+  justify-content: center;
+  display: flex;
+}
+.ReportView img {
+  width: 80vw;
 }
 .btnPanel {
   display: flex;
   align-items: center;
   justify-content: flex-end;
+}
+.btnbox {
+  width: 15vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-decoration: none;
   color: #004e92;
   font-weight: 600;
+  margin-right: 2em;
 }
-.btnPanel button {
+.btnbox button {
   text-decoration: none;
   width: 4vw;
   font-size: 25px;
@@ -721,6 +805,7 @@ form {
   margin: 5px;
 }
 .bodytext {
+  cursor: pointer;
   display: flex;
   flex-direction: column;
 }
@@ -792,6 +877,38 @@ form {
 }
 .FamilyCard {
   display: flex;
+}
+.contact-card {
+  margin: 8px;
+  box-shadow: 4px -2px 7px #999;
+  text-decoration: none;
+  color: black;
+  margin-left: 10px;
+  width: 15vw;
+  margin-top: 2em;
+}
+.contact-card h3 {
+  background-color: rgb(41, 4, 204);
+  padding: 5px 10px;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.ContactUs {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 10px;
+}
+.ContactUs h4 {
+  color: #000428;
+}
+.ContactUs p i {
+  margin-right: 5px;
+  color: rgb(6, 105, 185);
+}
+.ContactUs img {
+  width: 20%;
+  margin: 5px auto;
 }
 .adddept .row {
   margin-bottom: 5px;
@@ -865,7 +982,8 @@ form {
   width: 100%;
 }
 .consultationcss {
-  width: 10em;
+  cursor: pointer;
+  width: 15em;
   height: 3em;
   border-radius: 0.5em;
   color: white;
@@ -926,7 +1044,7 @@ h3 {
   color: #fff;
   text-decoration: none;
   font-size: 15px;
-  background-color: rgb(46 82 147);
+  background-color: rgb(6, 105, 185);
   padding: 10px 15px;
   border-radius: 25px;
   margin-bottom: 1em;
@@ -958,13 +1076,15 @@ h3 {
 }
 .flex-container {
   display: flex;
-
   justify-content: center;
   flex-wrap: wrap;
   margin-top: 1rem;
   flex-direction: row;
-
-  /* background-color: #fff; */
+}
+.flex-head {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
 }
 .doctor-card2 {
   margin: 8px;
@@ -989,7 +1109,6 @@ h3 {
   color: black;
   margin-left: 10px;
   width: 15vw;
-  height: 22vh;
   margin-top: 2em;
 }
 .family-card h3 {
@@ -1095,8 +1214,8 @@ h3 {
   justify-items: center;
 }
 .doctordetails button {
+  cursor: pointer;
   width: 3vw;
-  padding: 2px;
   font-size: 35px;
   margin: 3px;
   border-width: 0px;
@@ -1148,12 +1267,13 @@ h3 {
 
 .banner-text {
   width: 35vw;
-  height: 50vh;
+  height: 60vh;
   margin-top: 2em;
   display: flex;
 }
 .banner-text img {
   width: 35vw;
+  display: flex;
   border-radius: 1em;
   box-shadow: 2px -2px 3px #999;
 }
@@ -1189,6 +1309,7 @@ h3 {
   font-size: 14px;
   line-height: 4vh;
 }
+
 .maintrans h3 {
   font-size: 16px;
   margin-top: 15px;
@@ -1196,6 +1317,7 @@ h3 {
 .alltransation > div p b {
   color: #0669b9;
 }
+
 .transdoctor {
   width: 7vw;
   color: #0669b9;
@@ -1209,10 +1331,26 @@ h3 {
   border-radius: 10px;
   box-shadow: 5px 2px 6px #ccc;
 }
+.alltransation1 {
+  padding: 5px;
+  background-color: #ffff;
+  display: flex;
+  justify-content: space-around;
+  margin: 4px;
+  border-radius: 10px;
+}
+.appointbuttcss{
+  padding: 5px;
+  background-color: #ffff;
+  display: flex;
+  justify-content: space-around;
+  margin: 4px;
+  border-radius: 10px;
+}
 section.login {
   background-color: #f5f5f5;
   width: 50%;
-  margin: 80px auto;
+  margin: 60px auto;
   border-radius: 15px;
   padding: 15px;
   box-shadow: 0px 5px 17px #999;
@@ -1248,7 +1386,7 @@ button:focus {
   width: 100%;
   text-align: left;
 }
-a.forgotpass {
+.forgotpass {
   width: 100%;
   float: left;
   font-size: 13px;
@@ -1266,13 +1404,8 @@ section.login form {
 }
 
 .bookingtab {
-  margin-top: 20px;
-  /* box-shadow: 0px 2px 2px #ccc; */
   width: 95vw;
   background-color: #fff;
-  /* height: 80vh; */
-  /* position: relative; */
-  /* margin-left: 15em; */
   display: flex;
   margin-bottom: 2em;
 }
@@ -1442,6 +1575,7 @@ section.login form {
   .col5 {
     width: 40vh;
   }
+
   .contact-banner {
     margin-top: 5em;
   }
@@ -1539,7 +1673,6 @@ header .icon {
     display: flex;
     flex-direction: column;
   }
-
   .logo img {
     width: 40vw;
     height: 10vh;
@@ -1562,6 +1695,26 @@ header .icon {
     border-radius: 10px;
     box-shadow: 5px 2px 6px #ccc;
   }
+  .alltransation1 {
+    border: 1px solid blue;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffff;
+    margin: 4px;
+    border-radius: 10px;
+    box-shadow: 5px 2px 6px #ccc;
+    align-items: stretch;
+  }
+  .appointbuttcss {
+    border: 1px solid blue;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffff;
+    margin: 4px;
+    border-radius: 10px;
+    box-shadow: 5px 2px 6px #ccc;
+    align-items: stretch;
+  }
 
   .dashboard_maincontent img {
     width: 95vw;
@@ -1569,7 +1722,7 @@ header .icon {
     background-size: cover;
   }
   .dashboard_icons {
-    top: 230px;
+    top: 260px;
   }
 
   .logo img {
@@ -1603,11 +1756,11 @@ header .icon {
     margin-top: 1em;
     width: 80vw;
     display: flex;
-    height: 30vh;
+    height: 40vh;
   }
   .banner-text img {
     width: 80vw;
-    height: 30vh;
+    background-size: cover;
   }
 
   .doctorpic img {
@@ -1631,17 +1784,18 @@ header .icon {
     margin-top: 0px;
     box-shadow: 0px 2px 2px #ccc;
     background-color: #fff;
+    margin-bottom: 0.5em;
   }
   header #myNav {
     display: none;
   }
   header .icon {
-    width: 60px;
+    width: 50px;
     background-color: rgba(22, 115, 190, 0.8);
     display: block;
     position: absolute;
     right: 7px;
-    font-size: 45px;
+    font-size: 35px;
     top: 2px;
     color: white;
   }
@@ -1664,6 +1818,9 @@ header .icon {
 
   header ul li a:hover {
     color: black;
+  }
+  header ul li a i:hover {
+    color: white;
   }
   .active {
     background-color: #4caf50;
@@ -1720,29 +1877,34 @@ header .icon {
     width: 90vw;
     margin-left: 2em;
   }
-  .MarginTop11 {
+  /* .MarginTop11 {
     display: flex;
-    flex-direction: row;
     width: 100vw;
-    margin-left: 2em;
-  }
+  } */
   .prescriptioncss {
-    width: 50vw;
-    margin-left: 3.2em;
+    width: 90vw;
+    margin-top: 5px;
   }
   .consultationcss {
-    margin-left: 3.5em;
-    width: 50vw;
+    width: 90vw;
+    margin-top: 5px;
   }
   .reportscss {
-    align-items: center;
-    justify-content: center;
-    margin-left: 5em;
-    width: 50vw;
+    width: 90vw;
+    margin-top: 5px;
+    cursor: pointer;
+  }
+  .reschedulecss {
+    width: 90vw;
+    margin: 5px 0px;
+  }
+    .consentcss {
+    width: 90vw;
+    margin: 5px 0px;
   }
 
   .spinnerdiv img {
-    width: 20vw;
+    width: 25vw;
     height: 20vh;
     border-radius: "10px";
   }
@@ -1752,13 +1914,140 @@ header .icon {
   .add_departmet {
     margin-bottom: 2em;
     width: 80vw;
-
     flex-direction: column;
   }
+  .backbtnslot {
+    width: 80vw;
+    margin: 0px auto;
+  }
+  .backbtn {
+    width: 80vw;
+    margin: 0px auto;
+  }
+  .bookingtab {
+    margin-top: 20px;
+    width: 95vw;
+    height: 50vh;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+  }
+  .doctor-card1 {
+    margin: 8px;
+    box-shadow: 4px -2px 7px #999;
+    text-decoration: none;
+    color: black;
+    margin-left: 12em;
+    width: 80vw;
+    height: 27vh;
+    /* margin-top: 3em; */
+  }
+  .datecssne3 h5 {
+    margin-left: 1em;
+  }
+  .datecssne3 {
+    display: flex;
+    flex-direction: column;
+    margin-left: 3em;
+    width: 50vw;
+    margin-top: 1em;
+  }
+  .bookingslotcss {
+    display: flex;
+    width: 60vw;
+    margin-left: 0.5em;
+    flex-direction: column;
+    /* background-color: crimson; */
+  }
+  .slotdatecss {
+    margin-top: 10px;
+    width: 90vw;
+    display: flex;
+    flex-wrap: wrap;
+    height: 70vh;
+  }
+  .SlotCard {
+    display: flex;
+    width: 20vw;
+    height: 10vh;
+    margin: 5px;
+  }
+  .bookingslotcss h4 {
+    margin-left: 3em;
+  }
+
+  .btnPanel {
+    justify-content: center;
+  }
+  .btnbox {
+    margin: 0px auto;
+    width: 90vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #fff;
+    font-weight: 600;
+    background-color: #004e92;
+  }
+  .btnbox button {
+    margin-right: 1em;
+    width: 4vw;
+    font-size: 25px;
+    color: #fff;
+    cursor: pointer;
+  }
+
+  .ReportHeader {
+    width: 90vw;
+    font-size: 13px;
+  }
+  .Reportpanel {
+    width: 90vw;
+  }
+  .Reportpanel button {
+    margin-right: 1em;
+    font-size: 23px;
+  }
+  .reportbox {
+    width: 25vw;
+  }
+  .reportbtn {
+    width: 35vw;
+    justify-content: center;
+  }
+  .reportcard {
+    width: 60vw;
+    height: 40vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #999;
+    margin: 2em;
+  }
+
+  .reportcard img {
+    width: 60vw;
+    height: 35vh;
+    position: relative;
+    transition: transform 0.2s;
+  }
+  .reportcard img:hover {
+    margin-top: 3em;
+    transform: scale(2);
+    z-index: 10;
+  }
+  .flex-container {
+    padding-bottom: 10px;
+    z-index: 10;
+  }
+
   .profileflex {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+  }
+  .doctordetails button {
+    width: 10vw;
   }
 }

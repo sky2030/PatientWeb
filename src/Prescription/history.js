@@ -15,7 +15,7 @@ class PrescriptionList extends React.Component {
         const token = localStorage.getItem("token");
 
         let loggedIn = true;
-        let key_prefix = ""
+
         if (token == null) {
             loggedIn = false;
         }
@@ -55,7 +55,22 @@ class PrescriptionList extends React.Component {
                 }
             })
             .catch((Error) => {
-                alert(Error);
+                if (Error.message === "Network Error") {
+                    alert("Please Check your Internet Connection")
+                    console.log(Error.message)
+                    return;
+                }
+                if (Error.response.data.code === 403) {
+                    alert(Error.response.data.message)
+                    console.log(JSON.stringify("Error 403: " + Error.response.data.message))
+                    this.setState({
+                        loggedIn: false
+                    })
+
+                }
+                else {
+                    alert("Something Went Wrong")
+                }
             });
     };
 
@@ -64,17 +79,17 @@ class PrescriptionList extends React.Component {
         const { Prescription } = this.state;
         const PrescriptionList = Prescription.length ? (
             Prescription.map((item, index) => {
-                const advice = item.information == undefined ? "" : item.information.advice;
-                const special_advice = item.information == undefined ? "" : item.information.special_advice;
-                const symptoms = item.information == undefined ? "" : item.information.symptoms;
-                const findings = item.information == undefined ? "" : item.information.lab_findings;
-                const fileString = item.information == undefined ? "" : item.information.file_path;
+                const advice = item.information === undefined ? "" : item.information.advice;
+                const special_advice = item.information === undefined ? "" : item.information.special_advice;
+                const symptoms = item.information === undefined ? "" : item.information.symptoms;
+                const findings = item.information === undefined ? "" : item.information.lab_findings;
+                const fileString = item.information === undefined ? "" : item.information.file_path;
                 const patientName = item.consultant.name ? item.consultant.name : NA;
                 const patientWeight = item.consultant.weight ? item.consultant.weight : NA;
                 const patientAge = item.consultant.age ? item.consultant.age : NA;
                 const patientHeight = item.consultant.height ? item.consultant.height : NA;
                 const patientGender = item.consultant.gender ? item.consultant.gender : NA;
-                const suggestedInvestigation = item.information == undefined ? "" : item.information.suggested_investigation;
+                const suggestedInvestigation = item.information === undefined ? "" : item.information.suggested_investigation;
                 const appointmentDate = moment(item.created_date).format("ll");
                 const Hospital_Name = item.hospital.name;
                 return (
@@ -123,6 +138,10 @@ class PrescriptionList extends React.Component {
                             <b>Signature: </b>
 
                         </div>
+                        {fileString ? <div className="Presbottom">
+                            <b> Attachement: </b>
+                            <img src={fileString} alt="Attachment" />
+                        </div> : null}
 
                     </div>
                 );
@@ -147,15 +166,17 @@ class PrescriptionList extends React.Component {
             <div className="Appcontainer">
                 <Navigation />
                 <div className="dashboard_wrap">
-                    <Link
-                        to={{
-                            pathname: "/Dashboard",
+                    <div className="flex-head">
+                        <Link
+                            to={{
+                                pathname: "/Dashboard",
 
-                        }}
-                        className="backbtn">
-                        {/* <i className="fas fa-arrow-left"></i> */}
+                            }}
+                            className="backbtn">
+                            {/* <i className="fas fa-arrow-left"></i> */}
             Back
         </Link>
+                    </div>
 
                     <div className="flex-container">{PrescriptionList}</div>
 

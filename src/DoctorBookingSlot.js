@@ -1,6 +1,6 @@
 import React from "react";
 import "./dashboard/dashboard.css";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import moment from "moment-timezone";
 import docicon from "./img/doctor-icon.jpg";
 import axios from "axios";
@@ -45,6 +45,7 @@ class Bookingslot extends React.Component {
             posts: [],
             doctor: {},
             post: {},
+            back: {},
             family: {},
             familyData: [],
             slotsData: [],
@@ -114,7 +115,8 @@ class Bookingslot extends React.Component {
     componentDidMount = async () => {
         await this.setState({
             doctor: this.props.location.Doctor.post,
-            post: this.props.location.Doctor.post
+            post: this.props.location.Doctor.post,
+            back: this.props.location.Doctor.post
         });
         // await this.updateStartEndDate(new Date())
         this.getDoctorsSlots()
@@ -149,7 +151,22 @@ class Bookingslot extends React.Component {
                 }
             })
             .catch((Error) => {
-                alert(Error);
+                if (Error.message === "Network Error") {
+                    alert("Please Check your Internet Connection")
+                    console.log(Error.message)
+                    return;
+                }
+                if (Error.response.data.code === 403) {
+                    alert(Error.response.data.message)
+                    console.log(JSON.stringify("Error 403: " + Error.response.data.message))
+                    this.setState({
+                        loggedIn: false
+                    })
+
+                }
+                else {
+                    alert("Something Went Wrong")
+                }
             });
     };
 
@@ -178,13 +195,28 @@ class Bookingslot extends React.Component {
                 }
             })
             .catch((Error) => {
-                alert(Error);
+                if (Error.message === "Network Error") {
+                    alert("Please Check your Internet Connection")
+                    console.log(Error.message)
+                    return;
+                }
+                if (Error.response.data.code === 403) {
+                    alert(Error.response.data.message)
+                    console.log(JSON.stringify("Error 403: " + Error.response.data.message))
+                    this.setState({
+                        loggedIn: false
+                    })
+
+                }
+                else {
+                    alert("Something Went Wrong")
+                }
             });
     };
 
 
     render() {
-        const { doctor, post, posts, familyData, slotDate } = this.state;
+        const { doctor, post, posts, familyData, slotDate, back } = this.state;
         let allfamilyjson = [
             {
                 id: "",
@@ -215,7 +247,7 @@ class Bookingslot extends React.Component {
                     <Link
                         to={{
                             pathname: "/payment",
-                            Id: { post, family_member_id },
+                            Id: { post, family_member_id, back },
                         }}
                         className="SlotCard"
                         style={{
@@ -231,7 +263,6 @@ class Bookingslot extends React.Component {
                             >
                                 {this.StringFromTime(post.time_millis)}
 
-
                             </p>
                             <p
                                 className="statusfont"
@@ -240,15 +271,9 @@ class Bookingslot extends React.Component {
                                 }}
                             >
                                 {post.status.toUpperCase()}
-
                             </p>
-
                         </div>
-
-
-
                     </Link>
-
 
                 );
             })
@@ -265,24 +290,31 @@ class Bookingslot extends React.Component {
                     <img src={Spinner} alt="Loading" />
                 </div>
             );
+
+        if (this.state.loggedIn === false) {
+            return <Redirect to="/" />;
+        }
         return (
             <div className="Appcontainer">
                 <Navigation />
-                <Link
-                    to={{
-                        pathname: "/Doctorlist",
-                        Hospital: { post },
-                    }}
-                    className="backbtnslot">
-                    {/* <i className="fas fa-arrow-left"></i>  */}
+                <div className="flex-head">
+                    <Link
+                        to={{
+                            pathname: "/Doctorlist",
+                            Hospital: { post },
+                        }}
+                        className="backbtnslot">
+                        {/* <i className="fas fa-arrow-left"></i>  */}
                     Back
         </Link>
+                </div>
+
                 <div className="dashboard_wrap">
 
                     <div className="bookingtab">
                         <div className='doctorslotcol'>
                             <div
-                                key={post._id} className="doctor-card1 col">
+                                className="doctor-card1 col">
 
                                 <h3 style={{ color: "white" }}>
                                     Dr. {doctor.first_name} {doctor.last_name}
@@ -311,7 +343,7 @@ class Bookingslot extends React.Component {
                                     <div className="doctordetails">
                                         <p>
                                             <b>{doctor.department}</b> | {doctor.experience} EXP.
-                </p>
+                                         </p>
 
 
                                         <p>{doctor.degree}</p>

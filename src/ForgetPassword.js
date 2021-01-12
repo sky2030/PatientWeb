@@ -8,18 +8,11 @@ import { Link, Redirect } from "react-router-dom";
 class ForgetPassword extends React.Component {
     constructor(props) {
         super(props);
-        const token = localStorage.getItem("token");
 
-        let LoggedIn = true;
-        if (token == null) {
-            LoggedIn = false;
-        }
         this.state = {
             email: "",
-            password: "",
-            token: "",
-            LoggedIn,
-            emailError: ""
+            emailError: "",
+            submitted: false
         };
     }
 
@@ -46,29 +39,27 @@ class ForgetPassword extends React.Component {
 
     submitForm = (e) => {
         e.preventDefault();
-        const { email, password } = this.state;
+        const { email } = this.state;
         const isValid = this.validate();
         if (isValid) {
             const payload = {
-                email,
-                password,
+                email
             };
-
             axios({
                 url: "https://stage.mconnecthealth.com/v1/patient/forget-password",
                 method: "POST",
                 data: payload,
             })
                 .then(async (response) => {
-                    const data = response.data.data.access_token;
+                    const data = response.data;
                     console.log(response);
                     if (response.data.code === 200) {
-                        localStorage.setItem("token", data);
-                        await this.setState({
-                            token: localStorage.getItem("token"),
-                        });
+                        alert(data.message)
+                        this.setState({
+                            submitted: true
+                        })
                     } else {
-                        alert(response.data.message)
+                        alert(data.message)
                         console.log("Something Went Wrong", e);
                     }
                 }
@@ -79,30 +70,29 @@ class ForgetPassword extends React.Component {
                 });
         }
 
-        this.setState({
-            token: localStorage.getItem("token")
-        })
+        // this.setState({
+        //     token: localStorage.getItem("token")
+        // })
 
-        if (this.state.token === '') {
-            return null
-        }
-        else {
-            this.setState({
-                LoggedIn: true
-            })
-        }
-        if (email === "8882973229" && password === "shiv") {
-            localStorage.setItem("token", "aaaefdgadftaerd")
-            this.setState({
-                LoggedIn: true
-            })
-        }
+        // if (this.state.token === '') {
+        //     return null
+        // }
+        // else {
+        //     this.setState({
+        //         LoggedIn: true
+        //     })
+        // }
+        // if (email === "8882973229" && password === "shiv") {
+        //     localStorage.setItem("token", "aaaefdgadftaerd")
+        //     this.setState({
+        //         LoggedIn: true
+        //     })
+        // }
     };
     render() {
-        if (this.state.token !== "") {
-            return <Redirect to="/Login" />;
+        if (this.state.submitted) {
+            return <Redirect to="/login" />;
         }
-
         return (
             <section className="login">
                 <img src={logo} alt="logo" />
@@ -119,8 +109,8 @@ class ForgetPassword extends React.Component {
                                 type="text"
                                 id="email"
                                 name="email"
-                            //value={this.state.email}
-                            //onChange={this.onChange}
+                                value={this.state.email}
+                                onChange={this.onChange}
                             ></input>
                         </div>
                         <div style={{
@@ -129,15 +119,16 @@ class ForgetPassword extends React.Component {
                             display: 'flex',
                             flexDirection: 'row'
                         }}>
-                            <div>
-                                <Link to="/Login">
-                                    {/* <input type="submit" className="button" /> */}
-                                    <button type="submit" className='cancelbtn' >Cancel</button>
-                                </Link>
-                            </div>
+
                             <div>
                                 {/* <input type="submit" className="button" /> */}
                                 <button type="submit" >Submit</button>
+                            </div>
+                            <div>
+                                <Link to="/Login">
+                                    {/* <input type="submit" className="button" /> */}
+                                    <button type="reset" className='cancelbtn' >Cancel</button>
+                                </Link>
                             </div>
 
                         </div>

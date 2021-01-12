@@ -20,6 +20,7 @@ class Updatehospitaldetails extends React.Component {
     this.state = {
       loggedIn,
       id: "",
+      health_Id: "",
       patient_name: "",
       mothers_name: "",
       gender: "",
@@ -53,6 +54,7 @@ class Updatehospitaldetails extends React.Component {
 
         this.setState({
           id: data._id,
+          health_Id: data.health_Id,
           patient_name: data.patient_name,
           email: data.email,
           mothers_name: data.mothers_name,
@@ -172,6 +174,7 @@ class Updatehospitaldetails extends React.Component {
     const {
       id,
       email,
+      health_Id,
       patient_name,
       mothers_name,
       gender,
@@ -189,6 +192,7 @@ class Updatehospitaldetails extends React.Component {
     const payload = {
       id,
       email,
+      health_Id,
       patient_name,
       mothers_name,
       gender,
@@ -224,8 +228,22 @@ class Updatehospitaldetails extends React.Component {
 
       })
       .catch((Error) => {
-        alert(Error)
-        console.log("internal server error");
+        if (Error.message === "Network Error") {
+          alert("Please Check your Internet Connection")
+          console.log(Error.message)
+          return;
+        }
+        if (Error.response.data.code === 403) {
+          alert(Error.response.data.message)
+          console.log(JSON.stringify("Error 403: " + Error.response.data.message))
+          this.setState({
+            loggedIn: false
+          })
+
+        }
+        else {
+          alert("Something Went Wrong")
+        }
       });
     //}
   };
@@ -305,6 +323,7 @@ class Updatehospitaldetails extends React.Component {
   resetUserInputs = () => {
     this.setState({
       patient_name: "",
+      health_Id: "",
       mothers_name: "",
       gender: "",
       dob: "",
@@ -323,6 +342,7 @@ class Updatehospitaldetails extends React.Component {
     const {
       email,
       patient_name,
+      health_Id,
       mothers_name,
       height,
       weight,
@@ -332,6 +352,9 @@ class Updatehospitaldetails extends React.Component {
       pincode,
     } = this.state;
 
+    if (this.state.loggedIn === false) {
+      return <Redirect to="/" />;
+    }
     if (this.state.submitted) {
       return <Redirect to="/PatientProfile" />;
     }
@@ -376,6 +399,13 @@ class Updatehospitaldetails extends React.Component {
                   name="mothers_name"
                   value={mothers_name}
                   placeholder="Mother's Maiden Name"
+                  onChange={this.handleChange}
+                />
+                <input
+                  type="text"
+                  name="health_Id"
+                  value={health_Id}
+                  placeholder="Enter NDHM Health ID"
                   onChange={this.handleChange}
                 />
                 <select
@@ -864,7 +894,7 @@ class Updatehospitaldetails extends React.Component {
                 </button>
               </div>
               <img
-                alt="Profile Picture"
+                alt="Profile"
                 src={this.state.picture}
                 style={{ width: "50%" }}
               />

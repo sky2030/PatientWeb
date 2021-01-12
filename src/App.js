@@ -27,6 +27,8 @@ import RazorPayment from './Payment'
 import DoctorBookingSLot from './DoctorBookingSlot'
 import Reschedule from './Reschedule'
 import Signup from './Signup'
+import ViewReport from './Report/ViewReport'
+import Search from './SearchForm'
 
 
 function App() {
@@ -60,6 +62,10 @@ function App() {
           <Route path="/DoctorBookingSLot" component={DoctorBookingSLot} />
           <Route path="/Reschedule" component={Reschedule} />
           <Route path="/Signup" component={Signup} />
+          <Route path="/ViewReport" component={ViewReport} />
+          <Route path="/Search" component={Search} />
+
+          ViewReport
 
 
 

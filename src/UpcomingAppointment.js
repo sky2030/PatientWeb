@@ -1,11 +1,11 @@
 import React from "react";
 import "./dashboard/dashboard.css";
-import { Link } from "react-router-dom";
-import { Redirect } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import moment from "moment-timezone";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Nav from "./Nav";
+import axios from "axios";
 //import Spinner from "./img/Spinnergrey.gif";
 import events from './img/baloon.png';
 import * as AiIcons from 'react-icons/ai';
@@ -16,18 +16,18 @@ class Allappointment extends React.Component {
         super(props);
         const token = localStorage.getItem("token");
 
-        let LoggedIn = true;
+        let loggedIn = true;
         let startDate = moment().startOf("day").format("x");
         let endDate = moment().endOf("day").format("x");
 
         if (token == null) {
-            LoggedIn = false;
+            loggedIn = false;
         }
         this.state = {
             email: "",
             password: "",
             token: "",
-            LoggedIn,
+            loggedIn,
             startDate: startDate,
             endDate: endDate,
             slotDate: new Date(),
@@ -35,9 +35,7 @@ class Allappointment extends React.Component {
             isDatePickerAvailable: false,
             appointmentList: [],
             slotValue: "booked",
-            allSlots: [],
             loading: "",
-            slotValue: 'booked',
             // appointmentList: [],
             allSlots: [],
             Joindata: []
@@ -59,26 +57,34 @@ class Allappointment extends React.Component {
 
         console.log(`this is start date ${startDate}`);
         console.log(`this is start date ${endDate}`);
-        let URL = `https://stage.mconnecthealth.com/v1/patient/slots?day_from=${startDate}&day_to=${endDate}&status[]=booked`;
+        //let URL = `https://stage.mconnecthealth.com/v1/patient/slots?day_from=${startDate}&day_to=${endDate}&status[]=booked`;
         let URL2 = `https://stage.mconnecthealth.com/v1/patient/doctorslots?day_from=${startDate}&day_to=${endDate}&self=true`;
 
-        fetch(URL2, {
-            method: "Get",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: localStorage.getItem("token"),
-            },
-        }
-        )
-            .then((res) => res.json())
+        // fetch(URL2, {
+        //     method: "Get",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //         Authorization: localStorage.getItem("token"),
+        //     },
+        // }
+        // )
+        //     .then((res) => res.json())
+        axios
+            .get(URL2,
+                {
+                    headers: {
+                        Authorization: localStorage.getItem("token"),
+                    },
+                }
+            )
             .then((results) => {
                 console.log(results)
-                if (results.code === 200) {
+                if (results.data.code === 200) {
                     this.setState({
-                        allSlots: results.data
+                        allSlots: results.data.data
                     });
-                    let list = results.data.filter(item => {
-                        if (item.status == slotValue)
+                    let list = results.data.data.filter(item => {
+                        if (item.status === slotValue)
                             return item
                     })
                     this.setState({
@@ -96,8 +102,25 @@ class Allappointment extends React.Component {
                 //   alert(results.message);
                 // }
             })
-            .catch((err) => {
-                alert(err);
+            .catch((Error) => {
+                // alert(Error.response.data.message)
+                console.log(JSON.stringify(Error))
+                if (Error.message === "Network Error") {
+                    alert("Please Check your Internet Connection")
+                    console.log(Error.message)
+                    return;
+                }
+                if (Error.response.data.code === 403) {
+                    alert(Error.response.data.message)
+                    console.log(JSON.stringify("Error 403: " + Error.response.data.message))
+                    this.setState({
+                        loggedIn: false
+                    })
+
+                }
+                else {
+                    alert("Something Went Wrong")
+                }
             });
     };
 
@@ -106,7 +129,8 @@ class Allappointment extends React.Component {
             slotValue: e.target.value
         })
         let list = this.state.allSlots.filter(item => {
-            if (item.status == e.target.value)
+
+            if (item.status === e.target.value)
                 return item
         })
         this.setState({
@@ -195,20 +219,18 @@ class Allappointment extends React.Component {
     };
 
     render() {
-        if (localStorage.getItem("token") == null) {
-            return <Redirect to="/" />;
-        }
+
 
         const RoomData = this.state.Joindata
 
-        // if (this.state.submitted == true) {
-        //   return <Redirect to={{
-        //     pathname: '/EnableX',
-        //     item: { RoomData }
-        //   }} />
-        // }
+        if (this.state.submitted) {
+            return <Redirect to={{
+                pathname: '/EnableX',
+                item: { RoomData }
+            }} />
+        }
 
-        const { appointmentList, slotValue, allSlots } = this.state;
+        const { appointmentList } = this.state;
         const appointmentdata = appointmentList.length ? (
             appointmentList.map((item) => {
                 return (
@@ -217,8 +239,8 @@ class Allappointment extends React.Component {
                             Dr. {item.doctor.name} || {moment(item.day_millis).format("ll")} ||{" "}
                             {this.StringFromTime(item.time_millis)}
                         </h3>
-                        {item.status == "booked" ?
-                            <div className="alltransation">
+                        {item.status === "booked" ?
+                            <div className="alltransation1">
 
                                 <Link
                                     to={{
@@ -288,7 +310,8 @@ class Allappointment extends React.Component {
                                 </Link>
 
 
-                            </div> : <div className="alltransation">
+                            </div>
+                            : <div className="alltransation1">
 
                                 <Link
                                     to={{
@@ -333,18 +356,26 @@ class Allappointment extends React.Component {
 
                     className="spinnerdiv"
                 >
-                    {/* <b>No Appointments Available for the  Selected Date </b> */}
-                    <img src={events} alt="Loading"
+                    <div className="spinnernew">
+                        {/* <b>No Appointments Available for the  Selected Date </b> */}
+                        <img src={events} alt="Loading"
+                            style={{
+                                width: '22vw'
+                            }}
+                        />
+                    </div>
+                    <div>
+                        <p
 
-                    />
-                    <p
-
-                        className='noappointmentcss'>
-                        No Appointments Available
+                            className='noappointmentcss'>
+                            No Appointments Available
             </p>
+                    </div>
                 </div>
             );
-
+        if (this.state.loggedIn === false) {
+            return <Redirect to="/" />;
+        }
         return (
             <div className="Appcontainer">
                 <Nav />

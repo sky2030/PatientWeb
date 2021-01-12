@@ -53,7 +53,22 @@ class Doctorlist extends React.Component {
         }
       })
       .catch((Error) => {
-        alert(Error);
+        if (Error.message === "Network Error") {
+          alert("Please Check your Internet Connection")
+          console.log(Error.message)
+          return;
+        }
+        if (Error.response.data.code === 403) {
+          alert(Error.response.data.message)
+          console.log(JSON.stringify("Error 403: " + Error.response.data.message))
+          this.setState({
+            loggedIn: false
+          })
+
+        }
+        else {
+          alert("Something Went Wrong")
+        }
       });
   };
 
@@ -139,22 +154,25 @@ class Doctorlist extends React.Component {
         </div>
       );
 
-    // if (this.state.loggedIn === false) {
-    //   return <Redirect to="/" />;
-    // }
+    if (this.state.loggedIn === false) {
+      return <Redirect to="/" />;
+    }
     return (
       <div className="Appcontainer">
         <Navigation />
         <div className="dashboard_wrap">
-          <Link
-            to={{
-              pathname: "/Alldepartment",
-              Hospital: { post },
-            }}
-            className="backbtn">
-            {/* <i className="fas fa-arrow-left"></i> */}
+          <div className="flex-head">
+            <Link
+              to={{
+                pathname: "/Alldepartment",
+                Hospital: { post },
+              }}
+              className="backbtn">
+              {/* <i className="fas fa-arrow-left"></i> */}
             Back
         </Link>
+          </div>
+
           <div className="flex-container">
 
             {postList}

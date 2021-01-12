@@ -1,7 +1,6 @@
 import React from "react";
 import Navigation from "../Nav";
 import { Link, Redirect } from "react-router-dom";
-
 import axios from "axios";
 import moment from "moment-timezone";
 import Spinner from "../img/Spinnergrey.gif";
@@ -17,7 +16,7 @@ class ReportList extends React.Component {
         const token = localStorage.getItem("token");
 
         let loggedIn = true;
-        let key_prefix = ""
+
         if (token == null) {
             loggedIn = false;
         }
@@ -61,7 +60,22 @@ class ReportList extends React.Component {
                 }
             })
             .catch((Error) => {
-                alert(Error);
+                if (Error.message === "Network Error") {
+                    alert("Please Check your Internet Connection")
+                    console.log(Error.message)
+                    return;
+                }
+                if (Error.response.data.code === 403) {
+                    alert(Error.response.data.message)
+                    console.log(JSON.stringify("Error 403: " + Error.response.data.message))
+                    this.setState({
+                        loggedIn: false
+                    })
+
+                }
+                else {
+                    alert("Something Went Wrong")
+                }
             });
     };
     removeReport = (report_id, index) => {
@@ -97,26 +111,37 @@ class ReportList extends React.Component {
     render() {
         const { Reports } = this.state;
 
-
-
         const ReportList = Reports.length ? (
             Reports.map((post, index) => {
                 let fileString = ""
                 if (post.file) {
                     fileString = `${BASE}${post.file.url}`
                 }
+                let Serial = undefined
+                if (index === 0) {
+                    Serial = 1
+                } if (index === 1) {
+                    Serial = 2
+                }
+                else {
+                    Serial = index - 1
+                }
                 const report = post.report_name
                 const dateOfReport = moment(Number(post.report_date)).format("ll")
                 return (
-                    <div key={post.report_id} className="reportcard">
-                        <div className="Reportbody">
-                            <b>Report Type:</b> {report}
-                        </div>
-                        <img src={fileString} alt="Report" />
-                        <div className="Reportbody">
-                            <b>Date of Report: </b>{dateOfReport}
-                        </div>
-                        <div className="Reportbody">
+
+                    <div key={post.report_id} className="Reportpanel">
+                        <div className="reportindex">{index}</div>
+                        <div className="reportbox">{report}</div>
+                        <div className="reportbox">{dateOfReport}</div>
+
+                        <div className="reportbtn">
+                            <Link
+                                to={{
+                                    pathname: "/ViewReport",
+                                    Image: { fileString },
+                                }}
+                            ><button><i class="far fa-file-image"></i></button></Link>
                             <Link
                                 to={{
                                     pathname: "/UpdateReports",
@@ -126,6 +151,9 @@ class ReportList extends React.Component {
 
                             <button onClick={() => this.removeReport(post.report_id, index)}><i class="fas fa-trash-alt"></i></button>
                         </div>
+                        {/* <img src={fileString} alt="Report" /> */}
+
+
                     </div>
                 );
             })
@@ -142,6 +170,52 @@ class ReportList extends React.Component {
                 </div>
             );
 
+
+        // const ReportList = Reports.length ? (
+        //     Reports.map((post, index) => {
+        //         let fileString = ""
+        //         if (post.file) {
+        //             fileString = `${BASE}${post.file.url}`
+        //         }
+        //         const report = post.report_name
+        //         const dateOfReport = moment(Number(post.report_date)).format("ll")
+        //         return (
+        //             <div key={post.report_id} className="reportcard">
+        //                 <div className="Reportbody">
+        //                     <b>Report Type:</b> {report}
+        //                 </div>
+        //                 <div className="Reportbody">
+        //                     <b>Date of Report: </b>{dateOfReport}
+        //                 </div>
+        //                 <div className="Reportbody">
+        //                     <Link
+        //                         to={{
+        //                             pathname: "/UpdateReports",
+        //                             ReportItem: { post },
+        //                         }}
+        //                     ><button><i class="far fa-edit"></i></button></Link>
+
+        //                     <button onClick={() => this.removeReport(post.report_id, index)}><i class="fas fa-trash-alt"></i></button>
+        //                 </div>
+        //                 <img src={fileString} alt="Report" />
+
+
+        //             </div>
+        //         );
+        //     })
+        // ) : (
+        //         <div
+        //             className="center"
+        //             style={{
+        //                 justifyContent: "center",
+        //                 alignItems: "center",
+        //                 marginTop: "50px",
+        //             }}
+        //         >
+        //             <img src={Spinner} alt="Loading" />
+        //         </div>
+        //     );
+
         if (this.state.loggedIn === false) {
             return <Redirect to="/" />;
         }
@@ -149,12 +223,20 @@ class ReportList extends React.Component {
             <div className="Appcontainer">
                 <Navigation />
                 <div className="dashboard_wrap">
-                    <Link to="/AddReports" className="btnPanel">
-                        <button><i class="fas fa-plus-square"></i></button>
+                    <div to="/AddReports" className="btnPanel">
+                        <Link to="/AddReports" className="btnbox">  <button><i class="fas fa-plus-square"></i></button>
                         Add Report
                     </Link>
+                    </div>
 
-                    <div className="flex-container">{ReportList}</div>
+                    <div className="flex-container">
+                        <div className="ReportHeader">
+                            <div className="reportindex"><b>S.No</b></div>
+                            <div className="reportbox"><b>Type of Report</b></div>
+                            <div className="reportbox"> <b>Date of Report</b></div>
+                        </div>
+                        {ReportList}
+                    </div>
 
                 </div>
             </div>

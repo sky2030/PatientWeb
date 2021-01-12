@@ -37,7 +37,7 @@ class AllHospital extends Component {
             })
             .then((response) => {
                 console.log(response);
-                if (response.data.code == 200) {
+                if (response.data.code === 200) {
                     const data = response.data.data;
                     this.setState({ posts: data });
                     console.log("Data has been received!!");
@@ -45,8 +45,23 @@ class AllHospital extends Component {
                     alert(response.data.message)
                 }
             })
-            .catch((error) => {
-                alert(error);
+            .catch((Error) => {
+                if (Error.message === "Network Error") {
+                    alert("Please Check your Internet Connection")
+                    console.log(Error.message)
+                    return;
+                }
+                if (Error.response.data.code === 403) {
+                    alert(Error.response.data.message)
+                    console.log(JSON.stringify("Error 403: " + Error.response.data.message))
+                    this.setState({
+                        loggedIn: false
+                    })
+
+                }
+                else {
+                    alert("Something Went Wrong")
+                }
             });
     };
     render() {
@@ -103,7 +118,7 @@ class AllHospital extends Component {
             );
 
         if (this.state.loggedIn === false) {
-            return <Redirect to="/splash" />;
+            return <Redirect to="/" />;
         }
         return (
             <div className="Appcontainer">

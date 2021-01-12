@@ -1,6 +1,9 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import SmhsLogo from "../src/Smhs_Logo.png";
+//import SmhsLogo from "../src/Smhs_Logo.png";
+import SmhsLogo from "./img/VRCure.png";
+//import SmhsLogo from "./img/Splash.png";
+
 import "./dashboard/dashboard.css";
 import pointer from "./img/pointer.png";
 

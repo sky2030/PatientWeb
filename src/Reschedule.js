@@ -1,6 +1,6 @@
 import React from "react";
 import "./dashboard/dashboard.css";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import moment from "moment-timezone";
 import docicon from "./img/doctor-icon.jpg";
 import axios from "axios";
@@ -44,14 +44,17 @@ class Reschedule extends React.Component {
             endDate: endDate,
             posts: [],
             doctor: {},
+            hospital: {},
             post: {},
             family: {},
             familyData: [],
             slotsData: [],
+            from_appointment_id: '',
             isDatePickerAvailable: 'false',
             family_member_id: '',
             slotDate: new Date(),
-            appointmentItem: { doctor: {}, hospital: {}, department: {} }
+            submitted: false
+
         };
     }
 
@@ -112,14 +115,17 @@ class Reschedule extends React.Component {
         return returnValue;
     };
     componentDidMount = async () => {
+        console.log("this is doctor data" + JSON.stringify(this.props.location.Data.item.doctor))
+        console.log("this is hospital data" + JSON.stringify(this.props.location.Data.item.hospital))
         await this.setState({
-            doctor: this.props.location.hospital.code,
-            post: this.props.location.Doctor.post
+
+            doctor: this.props.location.Data.item.doctor,
+            hospital: this.props.location.Data.item.hospital,
+            from_appointment_id: this.props.location.Data.item.id
         });
         // await this.updateStartEndDate(new Date())
         this.getDoctorsSlots()
         this.getfamilydetails()
-        this.updateRescheduleAppointment()
     };
 
     getDoctorsSlots = () => {
@@ -150,44 +156,33 @@ class Reschedule extends React.Component {
                 }
             })
             .catch((Error) => {
-                alert(Error);
+                if (Error.message === "Network Error") {
+                    alert("Please Check your Internet Connection")
+                    console.log(Error.message)
+                    return;
+                }
+                if (Error.response.data.code === 403) {
+                    alert(Error.response.data.message)
+                    console.log(JSON.stringify("Error 403: " + Error.response.data.message))
+                    this.setState({
+                        loggedIn: false
+                    })
+
+                }
+                else {
+                    alert("Something Went Wrong")
+                }
             });
     };
 
 
 
-    // getfamilydetails = () => {
-    //     console.log("Data has been received!!");
-    //     axios
-    //         .get(
-    //             `${BASE_URL}family-members`,
-    //             {
-    //                 headers: {
-    //                     Authorization: localStorage.getItem("token"),
-    //                 },
-    //             }
-    //         )
-    //         .then((response) => {
-    //             console.log("this is family" + response);
-    //             if (response.data.code === 200) {
-    //                 const data = response.data.data.members;
-    //                 console.log(response);
-    //                 this.setState({ familyData: data });
-    //                 console.log("Data has been received!!");
-    //             } else {
-    //                 alert(response.data.message)
-    //             }
-    //         })
-    //         .catch((Error) => {
-    //             alert(Error);
-    //         });
-    // };
-
-    updateRescheduleAppointment = () => {
+    getfamilydetails = () => {
         console.log("Data has been received!!");
+
         axios
-            .PUT(
-                `${BASE_URL}appointment/reschedule`,
+            .get(
+                `${BASE_URL}family-members`,
                 {
                     headers: {
                         Authorization: localStorage.getItem("token"),
@@ -195,50 +190,93 @@ class Reschedule extends React.Component {
                 }
             )
             .then((response) => {
-                console.log("this is family" + response);
-                const data = response.data.data;
-                this.setState({
-                    from_appointment_id: this.state.appointmentItem.id,
-                    to_appointment_id: this.state.item.id,
-
-                });
+                console.log("this is family" + JSON.stringify(response));
                 if (response.data.code === 200) {
-                    const data = response.data.data;
-                    console.log(response);
+                    const data = response.data.data.members;
                     this.setState({ familyData: data });
-                    console.log("Data has been received!!");
+
                 } else {
                     alert(response.data.message)
                 }
             })
             .catch((Error) => {
-                alert(Error);
+                if (Error.message === "Network Error") {
+                    alert("Please Check your Internet Connection")
+                    console.log(Error.message)
+                    return;
+                }
+                if (Error.response.data.code === 403) {
+                    alert(Error.response.data.message)
+                    console.log(JSON.stringify("Error 403: " + Error.response.data.message))
+                    this.setState({
+                        loggedIn: false
+                    })
+
+                }
+                else {
+                    alert("Something Went Wrong")
+                }
             });
     };
 
-    slotPressed = (item, index) => {
-        if (item.status == IS_AVAILABLE || item.status == IS_TRANSIENT) {
-            alert(
-                "Reschedule your appointment",
-                // `Would you like to book ${StringFromTime(this.item.time_millis)} slot ?`,
-                [
-                    {
-                        text: "Cancel",
-                        style: "cancel",
-                    },
-                    {
-                        text: "OK",
-                        // onPress: (item) => {
-                        //     updateRescheduleAppointment(item);
-                        // navigation.navigate("Appointment")
-                        //},
-                    },
-                ]
-            );
-        }
+    updateRescheduleAppointment = (id) => {
+        console.log("Data has been received!!");
+        const {
+            from_appointment_id,
+        } = this.state;
+        const payload = {
+            from_appointment_id,
+            to_appointment_id: id
+        };
+        console.log("this is payload" + JSON.stringify(payload))
+        axios({
+            url: `${BASE_URL}appointment/reschedule`,
+            method: "PUT",
+            data: payload,
+            headers: {
+                Authorization: localStorage.getItem("token"),
+            },
+        })
+
+            .then((response) => {
+                console.log("this is response after rescheduling" + JSON.stringify(response));
+
+                if (response.data.code === 200) {
+                    alert(response.data.message)
+                    this.setState({
+                        submitted: true
+                    })
+                } else {
+                    alert(response.data.message)
+                }
+            })
+            .catch((Error) => {
+                if (Error.message === "Network Error") {
+                    alert("Please Check your Internet Connection")
+                    console.log(Error.message)
+                    return;
+                }
+                if (Error.response.data.code === 403) {
+                    alert(Error.response.data.message)
+                    console.log(JSON.stringify("Error 403: " + Error.response.data.message))
+                    this.setState({
+                        loggedIn: false
+                    })
+
+                }
+                else {
+                    alert("Something Went Wrong")
+                }
+            });
     };
 
     render() {
+        if (this.state.loggedIn === false) {
+            return <Redirect to="/" />;
+        }
+        if (this.state.submitted) {
+            return <Redirect to="/Allappointment" />;
+        }
         const { doctor, post, posts, familyData, slotDate } = this.state;
         let allfamilyjson = [
             {
@@ -248,7 +286,6 @@ class Reschedule extends React.Component {
         ];
 
         allfamilyjson = allfamilyjson.concat([...familyData]);
-        // familyData = [...allfamilyjson];
         const familylist = allfamilyjson.length ? (
             allfamilyjson.map((post) => {
                 return (
@@ -267,11 +304,8 @@ class Reschedule extends React.Component {
                 const { family_member_id } = this.state
                 return (
 
-                    <Link
-                        to={{
-                            pathname: "/payment",
-                            Id: { post, family_member_id },
-                        }}
+                    <div
+                        onClick={() => this.updateRescheduleAppointment(post.id)}
                         className="SlotCard"
                         style={{
                             backgroundColor: this.displayBGSlot(post.status),
@@ -300,12 +334,7 @@ class Reschedule extends React.Component {
 
                         </div>
 
-
-
-                    </Link>
-
-
-
+                    </div>
 
                 );
             })
@@ -325,15 +354,16 @@ class Reschedule extends React.Component {
         return (
             <div className="Appcontainer">
                 <Navigation />
-                <Link
-                    to={{
-                        pathname: "/Doctorlist",
-                        Hospital: { post },
-                    }}
-                    className="backbtnslot">
-                    {/* <i className="fas fa-arrow-left"></i>  */}
+                <div className="flex-head">
+                    <Link
+                        to={{
+                            pathname: "/Allappointment",
+                        }}
+                        className="backbtnslot">
+                        {/* <i className="fas fa-arrow-left"></i>  */}
                     Back
         </Link>
+                </div>
                 <div className="dashboard_wrap">
 
                     <div className="bookingtab">
@@ -342,7 +372,7 @@ class Reschedule extends React.Component {
                                 key={post._id} className="doctor-card1 col">
 
                                 <h3 style={{ color: "white" }}>
-                                    Dr. {doctor.first_name} {doctor.last_name}
+                                    Dr. {doctor.name}
                                 </h3>
                                 <div style={{
                                     display: 'flex',
@@ -367,14 +397,13 @@ class Reschedule extends React.Component {
                                     </div>
                                     <div className="doctordetails">
                                         <p>
-                                            <b>{doctor.department}</b> | {doctor.experience} EXP.
-                </p>
+                                            <b>{doctor.department}</b>
+                                        </p>
 
 
                                         <p>{doctor.degree}</p>
-                                        <p>{doctor.hospitalName}</p>
                                         <p>{doctor.designation}</p>
-                                        <p>Consultation Fees : Rs. {doctor.consultation}</p>
+                                        <p>Consultation : Rs. {doctor.fee}</p>
                                     </div>
                                     {/* </div> */}
                                 </div>
@@ -414,7 +443,7 @@ class Reschedule extends React.Component {
                                     />
 
                                 </div>
-                                {/* <div className='datecssne3'>
+                                <div className='datecssne3'>
                                     <h5
                                         style={{
                                             marginBottom: '5px'
@@ -425,13 +454,13 @@ class Reschedule extends React.Component {
                                         {familylist}
 
                                     </select>
-                                </div> */}
+                                </div>
                             </div>
                         </div>
 
 
                         <div className='bookingslotcss'>
-                            {this.state.family_member_id}
+
                             <h4>Booking Slots Status</h4>
 
                             <div className='slotdatecss'>

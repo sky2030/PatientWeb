@@ -119,9 +119,23 @@ class AddReport extends React.Component {
                         submitted: true,
                     });
                 })
-                .catch((error) => {
-                    alert(error)
-                    console.log("internal server error");
+                .catch((Error) => {
+                    if (Error.message === "Network Error") {
+                        alert("Please Check your Internet Connection")
+                        console.log(Error.message)
+                        return;
+                    }
+                    if (Error.response.data.code === 403) {
+                        alert(Error.response.data.message)
+                        console.log(JSON.stringify("Error 403: " + Error.response.data.message))
+                        this.setState({
+                            loggedIn: false
+                        })
+
+                    }
+                    else {
+                        alert("Something Went Wrong")
+                    }
                 });
         }
     };
@@ -195,6 +209,10 @@ class AddReport extends React.Component {
             DateError
         } = this.state;
 
+
+        if (this.state.loggedIn === false) {
+            return <Redirect to="/" />;
+        }
         if (this.state.submitted) {
             return <Redirect to="/Reports" />;
         }

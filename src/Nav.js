@@ -29,25 +29,30 @@ class Nav extends React.Component {
             </Link>
           </div>
           {/* <Burger /> */}
-          <ul id="myNav">
+          <ul className="animated slideInDown" id="myNav">
+            {/* <li>
+              <Link to="/Search">
+                <i className="fa fa-search"></i>Search
+              </Link>
+            </li> */}
             <li>
               <Link to="/Dashboard">
-                <i className="fas fa-home"></i>Dashboard
+                <i className="fas fa-home"></i>Home
               </Link>
             </li>
             <li>
               <Link to="/Allappointment">
-                <i class="far fa-calendar-check"></i>Appointments
+                <i className="far fa-calendar-check"></i>Appointments
               </Link>
             </li>
             <li>
               <Link to="/Transactions">
-                <i class="fas fa-rupee-sign"></i>Transactions
+                <i className="fas fa-rupee-sign"></i>Transactions
               </Link>
             </li>
             <li>
               <Link to="/PatientProfile">
-                <i class="fas fa-user-circle"></i>Profile
+                <i className="fas fa-user-circle"></i>Profile
               </Link>
             </li>
             {/* <li>
@@ -63,12 +68,12 @@ class Nav extends React.Component {
             {/* <li><Link to='/Login'><i className="fas fa-user-lock"></i>Login</Link></li> */}
             <li>
               <Link to="/">
-                <i class="fas fa-sign-out-alt"></i>logout
+                <i className="fas fa-sign-out-alt"></i>logout
               </Link>
             </li>
           </ul>
           <div onClick={() => this.Display()} className="icon">
-            <i class="fa fa-bars"></i>
+            <i className="fa fa-bars"></i>
           </div>
         </div>
       </header>

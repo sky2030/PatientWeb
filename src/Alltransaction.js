@@ -9,10 +9,20 @@ import axios from "axios";
 import moment from "moment-timezone";
 import Spinner from "./img/Spinnergrey.gif";
 
+const BASE = "https://stage.mconnecthealth.com";
+const BASE_URL = `${BASE}/v1/patient/`
+
 class Alltransation extends React.Component {
   constructor(props) {
     super(props);
+    const token = localStorage.getItem("token");
+
+    let loggedIn = true;
+    if (token == null) {
+      loggedIn = false;
+    }
     this.state = {
+      loggedIn,
       posts: [],
       dup_post: [],
       doctor: [],
@@ -36,7 +46,7 @@ class Alltransation extends React.Component {
         },
       })
       .then((response) => {
-        console.log(response);
+        console.log(response.data);
         if (response.data.code === 200) {
           const data = response.data.data;
           let dup_doctors = [
@@ -63,7 +73,6 @@ class Alltransation extends React.Component {
           })
           this.setState({
             doctor: dup_doctors,
-
             posts: data,
             dup_post: data
           })
@@ -72,13 +81,72 @@ class Alltransation extends React.Component {
           this.setState({
             posts: [],
             dup_post: [],
-            doctor: [],
-
+            doctor: []
           });
         }
       })
-      .catch(() => {
-        alert("Error retrieving data!!");
+      .catch((Error) => {
+        if (Error.message === "Network Error") {
+          alert("Please Check your Internet Connection")
+          console.log(Error.message)
+          return;
+        }
+        if (Error.response.data.code === 403) {
+          alert(Error.response.data.message)
+          console.log(JSON.stringify("Error 403: " + Error.response.data.message))
+          this.setState({
+            loggedIn: false
+          })
+
+        }
+        else {
+          alert("Something Went Wrong")
+        }
+      });
+  };
+
+  LoadMoreTransactions = () => {
+    const { posts } = this.state
+    console.log(`https://stage.mconnecthealth.com/v1/patient/orders?offset=${posts.length}`)
+    axios
+      .get(`https://stage.mconnecthealth.com/v1/patient/orders?offset=${posts.length}`, {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        if (response.data.code === 200) {
+          let data = response.data.data;
+          this.setState({
+            posts: posts.concat(data),
+            dup_post: posts.concat(data)
+          })
+          //   console.log("Data has been received!!" + data);
+        } else {
+          this.setState({
+            posts: [],
+            dup_post: [],
+          });
+        }
+      })
+      .catch((Error) => {
+        if (Error.message === "Network Error") {
+          alert("Please Check your Internet Connection")
+          console.log(Error.message)
+          return;
+        }
+        if (Error.response.data.code === 403) {
+          alert(Error.response.data.message)
+          console.log(JSON.stringify("Error 403: " + Error.response.data.message))
+          this.setState({
+            loggedIn: false
+          })
+
+        }
+        else {
+          alert("Something Went Wrong")
+        }
       });
   };
 
@@ -116,12 +184,13 @@ class Alltransation extends React.Component {
 
   };
   render() {
+    if (this.state.loggedIn === false) {
+      return <Redirect to="/" />;
+    }
     if (localStorage.getItem("token") === null) {
       return <Redirect to="/" />;
     }
     const { posts, doctor } = this.state;
-
-
     const DoctorList = doctor.length ? (
       doctor.map((item) => {
         let item_copy = JSON.parse(item)
@@ -132,7 +201,9 @@ class Alltransation extends React.Component {
         );
       })
     ) : (
-        <div className="center">No Doctor</div>
+        <option value="" >
+          All Doctor
+        </option>
       );
 
     const TransactionsList = posts.length ? (
@@ -243,6 +314,9 @@ class Alltransation extends React.Component {
             </div>
           </div>
           {TransactionsList}
+          {posts.length >= 20 ? <div className="tranbottom">
+            <button onClick={() => this.LoadMoreTransactions()}>  <i className="fa fa-arrow-down"></i> Load More </button>
+          </div> : null}
         </div>
       </div>
     );

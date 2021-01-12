@@ -40,7 +40,7 @@ class AllHospital extends Component {
             })
             .then((response) => {
                 console.log(response);
-                if (response.data.code == 200) {
+                if (response.data.code === 200) {
                     const data = response.data.data.members;
                     this.setState({ posts: data });
                     console.log("Data has been received!!");
@@ -48,8 +48,22 @@ class AllHospital extends Component {
                     alert(response.data.message)
                 }
             })
-            .catch((error) => {
-                alert(error);
+            .catch((Error) => {
+                if (Error.message === "Network Error") {
+                    alert("Please Check your Internet Connection")
+                    console.log(Error.message)
+                    return;
+                }
+                if (Error.response.data.code === 403) {
+                    alert(Error.response.data.message)
+                    console.log(JSON.stringify("Error 403: " + Error.response.data.message))
+                    this.setState({
+                        loggedIn: false
+                    })
+                }
+                else {
+                    alert("Something Went Wrong")
+                }
             });
     };
     removeReport = (id, index) => {
@@ -78,7 +92,21 @@ class AllHospital extends Component {
                 alert(results.message);
             })
             .catch((Error) => {
-                alert(Error + " Something Went Wrong");
+                if (Error.message === "Network Error") {
+                    alert("Please Check your Internet Connection")
+                    console.log(Error.message)
+                    return;
+                }
+                if (Error.response.data.code === 403) {
+                    alert(Error.response.data.message)
+                    console.log(JSON.stringify("Error 403: " + Error.response.data.message))
+                    this.setState({
+                        loggedIn: false
+                    })
+                }
+                else {
+                    alert("Something Went Wrong")
+                }
             });
     }
     render() {
@@ -86,14 +114,10 @@ class AllHospital extends Component {
         const postList = posts.length ? (
             posts.map((post, index) => {
                 return (
-                    <div
-
-                        className="family-card col"
-                    >
+                    <div className="family-card col">
                         <h3 style={{ color: "white" }}>{post.name}</h3>
                         <div className="FamilyCard">
                             <div className="doctordetails">
-
                                 <p>
                                     Relation: {post.relation}
                                 </p>
@@ -101,11 +125,13 @@ class AllHospital extends Component {
                                     {post.age} {post.gender}
                                 </p>
                                 <p>
-                                    Height: {post.height} Weight: {post.weight}
+                                    Height: {post.height} cm
+                                </p>
+                                <p>
+                                    Weight: {post.weight} Kg
                                 </p>
                             </div>
                             <div className="doctordetails">
-
                                 <Link
                                     to={{
                                         pathname: "/familydetail",
@@ -136,16 +162,18 @@ class AllHospital extends Component {
             );
 
         if (this.state.loggedIn === false) {
-            return <Redirect to="/splash" />;
+            return <Redirect to="/" />;
         }
         return (
             <div className="Appcontainer">
                 <Nav />
                 <div className="dashboard_wrap">
-                    <Link to="/addfamily" className="btnPanel">
-                        <button><i class="fas fa-plus-square"></i></button>
+                    <div className="btnPanel">
+                        <Link to="/addfamily" className="btnbox" >
+                            <button><i class="fas fa-plus-square"></i></button>
                         Add Member
                     </Link>
+                    </div>
                     <div className="flex-container">{postList}</div>
 
                 </div>

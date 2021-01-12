@@ -7,7 +7,7 @@ class Footer extends React.Component {
 		return (
 
 			<footer>
-				<p>  SMHS. © 2019 - 2020. All Rights Reserved |
+				<p>  SMHS. © 2020 - 2021. All Rights Reserved |
 				<a href="https://vrcure.blogspot.com/2020/10/vrcure-privacy-policy.html" target="_blank"
 						style={{ color: 'white', textDecoration: 'none', marginLeft: '5px' }}>
 						Privacy Policy </a> </p>

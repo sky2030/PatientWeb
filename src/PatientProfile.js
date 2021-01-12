@@ -5,6 +5,7 @@ import axios from "axios";
 import { Redirect } from "react-router-dom";
 import Navigation from "./Nav";
 import moment from "moment-timezone";
+import Avatar from './img/AvatarMale.png'
 
 class Myhospital extends React.Component {
   constructor(props) {
@@ -42,7 +43,22 @@ class Myhospital extends React.Component {
         }
       })
       .catch((Error) => {
-        alert(Error);
+        if (Error.message === "Network Error") {
+          alert("Please Check your Internet Connection")
+          console.log(Error.message)
+          return;
+        }
+        if (Error.response.data.code === 403) {
+          alert(Error.response.data.message)
+          console.log(JSON.stringify("Error 403: " + Error.response.data.message))
+          this.setState({
+            loggedIn: false
+          })
+
+        }
+        else {
+          alert("Something Went Wrong")
+        }
       });
   };
 
@@ -56,13 +72,13 @@ class Myhospital extends React.Component {
       <div className="Appcontainer">
         <Navigation />
         <div className="dashboard_wrap2">
-
           <div className="banner-text">
             <img
-              src={patients.picture}
-              alt="patients image"
+              src={!patients.picture ? Avatar : patients.picture}
+              alt="patients"
             />
           </div>
+
           <div className="flex-container scroll">
             <div className="col5 box-shad">
               <h3>{patients.patient_name}</h3>

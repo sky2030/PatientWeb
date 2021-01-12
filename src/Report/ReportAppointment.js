@@ -17,7 +17,7 @@ class AppointmentReport extends React.Component {
         const token = localStorage.getItem("token");
 
         let loggedIn = true;
-        let key_prefix = ""
+
         if (token == null) {
             loggedIn = false;
         }
@@ -65,7 +65,22 @@ class AppointmentReport extends React.Component {
                 }
             })
             .catch((Error) => {
-                alert(Error);
+                if (Error.message === "Network Error") {
+                    alert("Please Check your Internet Connection")
+                    console.log(Error.message)
+                    return;
+                }
+                if (Error.response.data.code === 403) {
+                    alert(Error.response.data.message)
+                    console.log(JSON.stringify("Error 403: " + Error.response.data.message))
+                    this.setState({
+                        loggedIn: false
+                    })
+
+                }
+                else {
+                    alert("Something Went Wrong")
+                }
             });
     };
     removeReport = (report_id, index) => {
@@ -116,7 +131,6 @@ class AppointmentReport extends React.Component {
                         <div className="Reportbody">
                             <b>Report Type:</b> {report}
                         </div>
-                        <img src={fileString} alt="Report" />
                         <div className="Reportbody">
                             <b>Date of Report: </b>{dateOfReport}
                         </div>
@@ -130,6 +144,8 @@ class AppointmentReport extends React.Component {
 
                             <button onClick={() => this.removeReport(post.report_id, index)}><i class="fas fa-trash-alt"></i></button>
                         </div>
+                        <img src={fileString} alt="Report" />
+
                     </div>
                 );
             })
@@ -153,15 +169,16 @@ class AppointmentReport extends React.Component {
             <div className="Appcontainer">
                 <Navigation />
                 <div className="dashboard_wrap">
-                    <Link
-                        to={{
+
+                    <div className="btnPanel">
+                        <Link to={{
                             pathname: "/AddReportAppointment",
                             Id: { appointment_id },
                         }}
-                        className="btnPanel">
-                        <button><i class="fas fa-plus-square"></i></button>
+                            className="btnbox">  <button><i class="fas fa-plus-square"></i></button>
                         Add Report
                     </Link>
+                    </div>
 
                     <div className="flex-container">{ReportList}</div>
 

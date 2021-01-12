@@ -26,7 +26,8 @@ class PaymentGatway extends React.Component {
             order: {},
             paymentButtonInfo: FETCHING_ORDERID,
             family_member_id: "",
-            submitted: false
+            submitted: false,
+            post: {}
 
 
         };
@@ -35,6 +36,7 @@ class PaymentGatway extends React.Component {
         await this.setState({
             appointment_id: this.props.location.Id.post.id,
             family_member_id: this.props.location.Id.family_member_id,
+            post: this.props.location.Id.back
         })
         this.FetchOrderID()
 
@@ -81,9 +83,23 @@ class PaymentGatway extends React.Component {
                 }
 
             })
-            .catch((error) => {
-                alert(error)
-                console.log("internal server error");
+            .catch((Error) => {
+                if (Error.message === "Network Error") {
+                    alert("Please Check your Internet Connection")
+                    console.log(Error.message)
+                    return;
+                }
+                if (Error.response.data.code === 403) {
+                    alert(Error.response.data.message)
+                    console.log(JSON.stringify("Error 403: " + Error.response.data.message))
+                    this.setState({
+                        loggedIn: false
+                    })
+
+                }
+                else {
+                    alert("Something Went Wrong")
+                }
             });
 
     };
@@ -143,6 +159,7 @@ class PaymentGatway extends React.Component {
                     razorpaySignature: response.razorpay_signature,
                 };
 
+
                 const result = await axios.post({
                     url: `${BASE_URL}order/paid`,
                     headers: {
@@ -157,6 +174,7 @@ class PaymentGatway extends React.Component {
                     submitted: true
                 })
             },
+            // "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
             prefill: {
                 name: order.customer.name,
                 email: order.customer.email,
@@ -244,9 +262,12 @@ class PaymentGatway extends React.Component {
 
     render() {
         const {
-            paymentButtonInfo
+            paymentButtonInfo,
+            post
         } = this.state;
-
+        if (this.state.loggedIn === false) {
+            return <Redirect to="/" />;
+        }
         if (this.state.submitted) {
             return <Redirect to="/Allappointment" />;
         }
@@ -259,9 +280,13 @@ class PaymentGatway extends React.Component {
                     <div className="adddept">
                         <div className="backarrow">
                             {" "}
-                            <Link to="/BookingSlot">
+                            <Link to={{
+                                pathname: "/DoctorBookingSLot",
+                                Doctor: { post },
+                            }}>
                                 <i className="fas fa-arrow-left"></i>
                             </Link>
+
                         </div>
                         <h2>Razorpay</h2>
 

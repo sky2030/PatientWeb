@@ -1,7 +1,8 @@
 import React from "react";
 //import ReactDOM from 'react-dom';
 import "./dashboard.css";
-import bgimg from "./img/bgimg.jpg";
+//import bgimg from "./img/bgimg.jpg";
+import bgimg from "./img/dashboard.jpg";
 import { Link } from "react-router-dom";
 import { Redirect } from "react-router-dom";
 import Navigation from "../Nav";
@@ -18,10 +19,12 @@ class Dashboard extends React.Component {
     }
     this.state = {
       loggedIn,
-      //token = localStorage.getItem("token")
     };
   }
   render() {
+    if (this.state.loggedIn === false) {
+      return <Redirect to="/" />;
+    }
     if (localStorage.getItem("token") == null) {
       return <Redirect to="/" />;
     }

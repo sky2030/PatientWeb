@@ -4,10 +4,6 @@ import "./dashboard/dashboard.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { Redirect } from "react-router-dom";
-import moment from "moment-timezone";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import ForgetPassword from "./ForgetPassword";
 
 class Updatehospitaldetails extends React.Component {
     constructor(props) {
@@ -49,23 +45,23 @@ class Updatehospitaldetails extends React.Component {
         if (!this.state.email.includes("@")) {
             emailError = "****Invalid Email";
         }
-        if (!this.state.phone) {
+        if (!this.state.mobile) {
             mobileError = "****Phone number cannot be blank";
         }
 
-        if (!this.state.passwordError) {
+        if (!this.state.password) {
             passwordError = "****Password cannot be blank";
         }
 
-        if (!this.state.confirm_passwordError) {
+        if (!this.state.confirm_password) {
             confirm_passwordError = "****Confirm password same as passwordand cannot be blank";
         }
 
-        if (!this.state.heightError) {
+        if (!this.state.height) {
             heightError = "****Choose the correct height";
         }
 
-        if (!this.state.weightError) {
+        if (!this.state.weight) {
             weightError = "****Choose the correct weight";
         }
 

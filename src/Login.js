@@ -81,8 +81,23 @@ class Login extends React.Component {
         }
         )
         .catch((Error) => {
-          alert(Error + " Server Not Responding")
-          console.log("internal server error");
+          console.log(JSON.stringify(Error.response.data))
+          if (Error.message === "Network Error") {
+            alert("Please Check your Internet Connection")
+            console.log(Error.message)
+            return;
+          }
+          if (Error.response.data.code === 401) {
+            alert(Error.response.data.message)
+            console.log(JSON.stringify("Error 401: " + Error.response.data.message))
+          }
+          if (Error.response.data.code === 422) {
+            alert(Error.response.data.message + "Entered Mobile number")
+            console.log(JSON.stringify("Error 422: " + Error.response.data.message))
+          }
+          else {
+            alert("Something Went Wrong")
+          }
         });
     }
 
@@ -106,9 +121,6 @@ class Login extends React.Component {
           <div className="loginbox">
             <i className="fas fa-user"></i>
             <div>
-              <div style={{ fontSize: 12, color: "red" }}>
-                {this.state.mobileError}
-              </div>
               <input
                 placeholder="Enter your Registered Mobile Number"
                 type="text"
@@ -117,13 +129,14 @@ class Login extends React.Component {
                 value={this.state.mobile}
                 onChange={this.onChange}
               ></input>
+              <div style={{ fontSize: 12, color: "red" }}>
+                {this.state.mobileError}
+              </div>
             </div>
           </div>
           <div className="loginbox">
             <i className="fas fa-lock"></i>
-            <div style={{ fontSize: 12, color: "red" }}>
-              {this.state.passwordError}
-            </div>
+
             <div style={{ display: 'flex', flexDirection: 'row' }}>
               <input
                 placeholder="Your Password"
@@ -138,10 +151,13 @@ class Login extends React.Component {
                 {this.state.hidden ? <i class="fas fa-eye-slash"></i> : <i class="fas fa-eye"></i>}
               </p>
             </div>
+            <div style={{ fontSize: 12, color: "red" }}>
+              {this.state.passwordError}
+            </div>
             <Link to="/ForgetPassword">
-              <a href="confirm" className="forgotpass">
+              <p className="forgotpass">
                 Forgot Password ?
-            </a>
+            </p>
             </Link>
           </div>
           <div>

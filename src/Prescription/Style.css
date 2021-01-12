@@ -62,12 +62,47 @@
 .Presbottom {
   display: flex;
   width: 25vw;
-  padding: 2px;
   font-size: 14px;
+}
+.Presbottom img {
+  width: 5vw;
+  transition: transform 0.2s;
+}
+.Presbottom img:hover {
+  transform: scale(10);
+  z-index: 10;
 }
 .Presbottom b {
   margin-left: 1em;
 }
 .Presbottom p {
   margin-left: 1em;
+}
+
+@media only screen and (max-width: 420px) {
+  .PresCard {
+    width: 85vw;
+    height: 80vh;
+    margin-right: 2em;
+    border: 1px solid black;
+  }
+  .PresLeft {
+    width: 25vw;
+    height: 45vh;
+    /* padding: 5px; */
+    font-size: 12px;
+  }
+  .PresFooter {
+    font-size: 14px;
+    padding: 2px;
+    display: flex;
+    width: 85vw;
+    border-top: 1px solid black;
+  }
+  .Presbottom {
+    display: flex;
+    width: 80vw;
+    padding: 2px;
+    font-size: 14px;
+  }
 }
